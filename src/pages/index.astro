@@ -5,6 +5,7 @@
 import Base from '../layouts/Base.astro';
 import EverydayCard from '../components/EverydayCard.astro';
 import { getEverydayPosts, getWorkPosts, getBlogPosts, getMediaUrl } from '../lib/api';
+import { decodeEntities } from '../lib/utils';
 
 // Fetch content for each section
 const [everydayData, workPosts, blogData] = await Promise.all([
@@ -79,10 +80,10 @@ const latestPostImage = latestPost ? await getMediaUrl(latestPost.featured_media
         )}
         <div class="p-4">
           <h3 class="text-yellow-500 text-xl font-bold group-hover:text-white transition-colors">
-            {latestPost.title.rendered.replace(/<[^>]*>/g, '')}
+            {decodeEntities(latestPost.title.rendered.replace(/<[^>]*>/g, ''))}
           </h3>
           <p class="text-teal-500 mt-2 line-clamp-2">
-            {latestPost.excerpt.rendered.replace(/<[^>]*>/g, '').trim()}
+            {decodeEntities(latestPost.excerpt.rendered.replace(/<[^>]*>/g, '').trim())}
           </p>
         </div>
       </a>
