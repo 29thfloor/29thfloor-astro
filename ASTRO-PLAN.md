@@ -669,22 +669,30 @@ add_action( 'save_post', '_29f__trigger_vercel_rebuild' );
 
 ## Implementation Checklist
 
-- [ ] Create GitHub repo `29thfloor/29thfloor-astro`
-- [ ] Initialize Astro project
-- [ ] Add Tailwind integration
-- [ ] Set up Tailwind config with color palette
-- [ ] Create API client (`src/lib/api.ts`)
-- [ ] Create Base layout
-- [ ] Build Everyday archive page with grid
-- [ ] Build single Everyday page
-- [ ] Create GIF hover Web Component
-- [ ] Build Work archive page
-- [ ] Build single Work page
-- [ ] Build homepage
-- [ ] Connect to Vercel
-- [ ] Test on preview URL
+- [x] Create GitHub repo `29thfloor/29thfloor-astro`
+- [x] Initialize Astro project
+- [x] Add Tailwind integration (v4 with @tailwindcss/vite)
+- [x] Set up Tailwind config with color palette
+- [x] Create API client (`src/lib/api.ts`)
+- [x] Create Base layout
+- [x] Build Everyday archive page with grid
+- [x] Build single Everyday page
+- [x] Create GIF hover Web Component
+- [x] Build Work archive page
+- [x] Build single Work page
+- [x] Build Blog archive page
+- [x] Build single Blog page
+- [x] Build homepage (hero, everyday, work, blog, about sections)
+- [x] Add pagination to Everyday archive
+- [x] Add prev/next navigation to single Everyday posts
+- [x] Connect to Vercel
+- [x] Test on preview URL
+- [x] Set up feature branch workflow
+- [x] Add Tailwind Typography plugin
+- [x] Create shared utilities (decodeEntities)
 - [ ] Configure custom domain
 - [ ] Set up deploy hook in WordPress
+- [ ] Implement on-demand rendering for large archives (optional)
 
 ---
 
@@ -702,10 +710,31 @@ add_action( 'save_post', '_29f__trigger_vercel_rebuild' );
 
 ---
 
-## Next Steps
+## Completion Log
 
-Ready to start? First task:
+### December 27, 2025 - Initial Build Complete
 
-1. Create the GitHub repo
-2. Initialize the Astro project
-3. Test API connection
+**Production URL:** https://29thfloor-astro.vercel.app
+
+**What was built:**
+- Complete Astro frontend consuming WordPress REST API
+- All core pages: home, everyday (paginated), work, blog
+- GIF hover Web Component for animated thumbnails
+- Tailwind v4 styling with custom color palette
+- Vercel deployment with preview deployments for PRs
+
+**Deviations from original plan:**
+- Used Tailwind v4 with `@tailwindcss/vite` instead of v3 config file
+- Added `@tailwindcss/typography` plugin for blog content styling
+- Created `src/lib/utils.ts` for shared utilities (not in original plan)
+- Blog section added (was implied but not explicitly in plan)
+- Currently using static generation for all pages (SSR deferred)
+
+**Known issues:**
+- Build time is long due to 1,800+ everyday posts being statically generated
+- Can switch to on-demand rendering if this becomes a problem
+
+**Pending:**
+- Custom domain configuration
+- WordPress deploy hook for automatic rebuilds
+- Site restructure (Everydays → Projects, new creative section)
