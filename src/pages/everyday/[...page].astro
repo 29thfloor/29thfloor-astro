@@ -1,0 +1,129 @@
+---
+/**
+ * Everyday Archive Page (Paginated)
+ *
+ * Displays a grid of everyday posts with pagination.
+ * - /everyday = page 1
+ * - /everyday/2 = page 2, etc.
+ */
+import Base from '../../layouts/Base.astro';
+import EverydayCard from '../../components/EverydayCard.astro';
+import { getEverydayPosts } from '../../lib/api';
+
+// Generate static pages for each page of results
+export async function getStaticPaths() {
+  const postsPerPage = 50;
+
+  // Fetch first page to get total count
+  const { total } = await getEverydayPosts(1, 1);
+  const totalPages = Math.ceil(total / postsPerPage);
+
+  // Generate paths for all pages
+  const paths = [];
+
+  // Page 1: /everyday (no page param)
+  paths.push({ params: { page: undefined } });
+
+  // Pages 2+: /everyday/2, /everyday/3, etc.
+  for (let i = 2; i <= totalPages; i++) {
+    paths.push({ params: { page: String(i) } });
+  }
+
+  return paths;
+}
+
+// Get current page from URL
+const { page } = Astro.params;
+const currentPage = page ? parseInt(page) : 1;
+const postsPerPage = 50;
+
+// Fetch posts for this page
+const { posts, total, totalPages } = await getEverydayPosts(currentPage, postsPerPage);
+
+// Calculate pagination range (show 5 page numbers centered on current)
+const maxVisible = 5;
+let startPage = Math.max(1, currentPage - Math.floor(maxVisible / 2));
+let endPage = Math.min(totalPages, startPage + maxVisible - 1);
+if (endPage - startPage < maxVisible - 1) {
+  startPage = Math.max(1, endPage - maxVisible + 1);
+}
+const pageNumbers = Array.from({ length: endPage - startPage + 1 }, (_, i) => startPage + i);
+---
+
+<Base title={currentPage > 1 ? `Everyday - Page ${currentPage}` : 'Everyday'} description="Daily creative work and experiments">
+  <section class="p-4">
+    {/* Page header */}
+    <header class="mb-6 flex items-center justify-between">
+      <h1 class="text-yellow-500 text-3xl font-bold">#EVERYDAY</h1>
+      <span class="text-teal-600 text-sm">{total} posts</span>
+    </header>
+
+    {/* The Grid */}
+    <div class="everyday-grid grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+      {posts.map((post, index) => (
+        <EverydayCard post={post} featured={index === 0 && currentPage === 1} />
+      ))}
+    </div>
+
+    {/* Pagination */}
+    <nav class="mt-8 flex justify-center items-center gap-1 md:gap-2">
+      {/* Previous */}
+      {currentPage > 1 ? (
+        <a
+          href={currentPage === 2 ? '/everyday' : `/everyday/${currentPage - 1}`}
+          class="min-w-[44px] min-h-[44px] flex items-center justify-center px-4 py-3 border border-teal-800 text-teal-500 hover:border-teal-500 hover:text-yellow-500 hover:bg-teal-900/50 transition-colors"
+        >
+          &larr;
+        </a>
+      ) : (
+        <span class="min-w-[44px] min-h-[44px] flex items-center justify-center px-4 py-3 border border-teal-900 text-teal-800">&larr;</span>
+      )}
+
+      {/* First page + ellipsis if needed */}
+      {startPage > 1 && (
+        <>
+          <a href="/everyday" class="min-w-[44px] min-h-[44px] flex items-center justify-center px-4 py-3 border border-teal-800 text-teal-500 hover:border-teal-500 hover:text-yellow-500 hover:bg-teal-900/50 transition-colors">1</a>
+          {startPage > 2 && <span class="px-2 text-teal-700">...</span>}
+        </>
+      )}
+
+      {/* Page numbers */}
+      {pageNumbers.map((num) => (
+        <a
+          href={num === 1 ? '/everyday' : `/everyday/${num}`}
+          class:list={[
+            'min-w-[44px] min-h-[44px] flex items-center justify-center px-4 py-3 border transition-colors',
+            num === currentPage
+              ? 'border-yellow-500 text-yellow-500 bg-yellow-500/10'
+              : 'border-teal-800 text-teal-500 hover:border-teal-500 hover:text-yellow-500 hover:bg-teal-900/50'
+          ]}
+        >
+          {num}
+        </a>
+      ))}
+
+      {/* Last page + ellipsis if needed */}
+      {endPage < totalPages && (
+        <>
+          {endPage < totalPages - 1 && <span class="px-2 text-teal-700">...</span>}
+          <a href={`/everyday/${totalPages}`} class="min-w-[44px] min-h-[44px] flex items-center justify-center px-4 py-3 border border-teal-800 text-teal-500 hover:border-teal-500 hover:text-yellow-500 hover:bg-teal-900/50 transition-colors">{totalPages}</a>
+        </>
+      )}
+
+      {/* Next */}
+      {currentPage < totalPages ? (
+        <a
+          href={`/everyday/${currentPage + 1}`}
+          class="min-w-[44px] min-h-[44px] flex items-center justify-center px-4 py-3 border border-teal-800 text-teal-500 hover:border-teal-500 hover:text-yellow-500 hover:bg-teal-900/50 transition-colors"
+        >
+          &rarr;
+        </a>
+      ) : (
+        <span class="min-w-[44px] min-h-[44px] flex items-center justify-center px-4 py-3 border border-teal-900 text-teal-800">&rarr;</span>
+      )}
+    </nav>
+  </section>
+
+  {/* Load the GIF hover Web Component */}
+  <script src="/js/components/gif-hover.js" type="module"></script>
+</Base>

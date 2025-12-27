@@ -1,0 +1,17 @@
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+
+@theme {
+  /* Colors - matching your WordPress theme */
+  --color-teal-500: #26A69A;
+  --color-teal-600: #1D7A74;
+  --color-teal-700: #155A56;
+  --color-teal-800: #0C3A38;
+  --color-teal-900: #0C2A2F;
+  --color-teal-950: #011518;
+
+  --color-yellow-500: #FFD600;
+
+  /* Fonts */
+  --font-mono: "Fira Code", monospace;
+}

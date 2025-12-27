@@ -1,0 +1,91 @@
+---
+/**
+ * EverydayCard Component
+ *
+ * Displays a single everyday post in the archive grid.
+ * Shows thumbnail, title, date, and media type badge.
+ *
+ * For GIF images, includes data attributes that the gif-hover
+ * Web Component uses to swap between static and animated versions.
+ */
+import type { EverydayPost } from '../lib/api';
+
+interface Props {
+  post: EverydayPost;
+  featured?: boolean;  // First post is larger (2x2)
+}
+
+const { post, featured = false } = Astro.props;
+const { toolset_fields } = post;
+
+// Determine the media type for the badge
+const mediaType = toolset_fields.embed
+  ? 'embed'
+  : toolset_fields.audio
+  ? 'audio'
+  : 'image';
+
+// Check if it's a GIF (for hover animation)
+const isGif = toolset_fields.image?.toLowerCase().endsWith('.gif');
+
+// Format the date
+const formattedDate = new Date(post.date).toLocaleDateString('en-US', {
+  month: 'short',
+  day: 'numeric',
+  year: 'numeric'
+});
+---
+
+<a
+  href={`/everyday/${post.slug}`}
+  class:list={[
+    'everyday-card',
+    'relative block border border-teal-800',
+    'hover:border-teal-500 hover:shadow-[inset_0_0_16px_#26A69A]',
+    'transition-all duration-200',
+    { 'col-span-2 row-span-2': featured }
+  ]}
+>
+  {/* Image - wrapped in gif-hover for animated GIFs */}
+  {isGif ? (
+    <gif-hover
+      data-static={toolset_fields.image_thumbnail}
+      data-animated={toolset_fields.image}
+      class="block"
+    >
+      <img
+        src={toolset_fields.image_thumbnail}
+        alt={post.title.rendered}
+        class="w-full h-full object-cover"
+        loading="lazy"
+      />
+    </gif-hover>
+  ) : (
+    <img
+      src={toolset_fields.image_thumbnail || '/placeholder.jpg'}
+      alt={post.title.rendered}
+      class="w-full h-full object-cover"
+      loading="lazy"
+    />
+  )}
+
+  {/* Meta overlay - top right */}
+  <div class="absolute top-0 right-0 bg-black/75 text-xs p-1 text-right max-w-[80%]">
+    <div class="text-yellow-500 truncate">{post.title.rendered}</div>
+    <div class="text-teal-600">{formattedDate}</div>
+  </div>
+
+  {/* Media type badge - bottom right */}
+  {mediaType !== 'image' && (
+    <div class="absolute bottom-0 right-0 bg-black/75 text-xs p-1 uppercase text-teal-500">
+      {mediaType === 'embed' ? 'Video' : 'Audio'}
+    </div>
+  )}
+
+  {/* File type badge for images - bottom right */}
+  {mediaType === 'image' && toolset_fields.image && (
+    <div class="absolute bottom-0 right-0 bg-black/75 text-xs p-1 uppercase text-teal-500">
+      {toolset_fields.image.split('.').pop()}
+    </div>
+  )}
+</a>

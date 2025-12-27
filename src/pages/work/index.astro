@@ -1,0 +1,62 @@
+---
+/**
+ * Work Archive Page
+ *
+ * Displays a grid of portfolio/project items.
+ * Each card shows the first image from work_images and the title.
+ */
+import Base from '../../layouts/Base.astro';
+import { getWorkPosts } from '../../lib/api';
+
+const posts = await getWorkPosts();
+---
+
+<Base title="Work" description="Portfolio and project work">
+  <section class="p-4">
+    {/* Page header */}
+    <header class="mb-6 flex items-center justify-between">
+      <h1 class="text-yellow-500 text-3xl font-bold">WORK</h1>
+      <span class="text-teal-600 text-sm">{posts.length} projects</span>
+    </header>
+
+    {/* Work Grid */}
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {posts.map((post) => {
+        const thumbnail = post.toolset_fields.work_images?.[0];
+        const title = post.title.rendered.replace(/<[^>]*>/g, '');
+        const excerpt = post.excerpt.rendered.replace(/<[^>]*>/g, '').trim();
+
+        return (
+          <a
+            href={`/work/${post.slug}`}
+            class="group block border border-teal-800 hover:border-teal-500 hover:shadow-[inset_0_0_16px_#26A69A] transition-all duration-200"
+          >
+            {/* Thumbnail */}
+            {thumbnail ? (
+              <img
+                src={thumbnail}
+                alt={title}
+                class="w-full aspect-video object-cover"
+                loading="lazy"
+              />
+            ) : (
+              <div class="w-full aspect-video bg-teal-900 flex items-center justify-center text-teal-700">
+                No image
+              </div>
+            )}
+
+            {/* Info */}
+            <div class="p-4">
+              <h2 class="text-yellow-500 font-bold group-hover:text-white transition-colors">
+                {title}
+              </h2>
+              {excerpt && (
+                <p class="text-teal-600 text-sm mt-1 line-clamp-2">{excerpt}</p>
+              )}
+            </div>
+          </a>
+        );
+      })}
+    </div>
+  </section>
+</Base>

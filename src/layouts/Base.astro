@@ -1,0 +1,72 @@
+---
+/**
+ * Base Layout
+ *
+ * This is the main layout wrapper for all pages.
+ * It includes the HTML boilerplate, global styles, header, and footer.
+ */
+
+// Import global styles (includes Tailwind)
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+  description?: string;
+}
+
+const { title, description = '29th Floor - Creative work by Daniel McFarland' } = Astro.props;
+---
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content={description} />
+  <title>{title} | 29th Floor</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;700&display=swap" rel="stylesheet" />
+
+</head>
+<body class="bg-teal-950 text-teal-500 font-mono min-h-screen">
+
+  <header class="flex items-center justify-between p-4">
+    <a href="/" class="text-white text-2xl font-bold hover:text-yellow-500 transition-colors">
+      29F_
+    </a>
+
+    <nav>
+      <ul class="flex gap-6">
+        <li>
+          <a href="/everyday" class="text-teal-500 hover:text-yellow-500 transition-colors">
+            Everyday
+          </a>
+        </li>
+        <li>
+          <a href="/work" class="text-teal-500 hover:text-yellow-500 transition-colors">
+            Work
+          </a>
+        </li>
+        <li>
+          <a href="/blog" class="text-teal-500 hover:text-yellow-500 transition-colors">
+            Blog
+          </a>
+        </li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <!-- Page content goes here via the slot -->
+    <slot />
+  </main>
+
+  <footer class="p-4 text-center text-teal-700 mt-8">
+    <p>&copy; {new Date().getFullYear()} 29th Floor</p>
+  </footer>
+
+</body>
+</html>
