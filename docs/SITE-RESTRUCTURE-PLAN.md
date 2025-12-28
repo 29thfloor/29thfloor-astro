@@ -34,7 +34,7 @@ C) **Keep current structure, just rename in nav**
    - Pros: No code changes
    - Cons: Doesn't feel like a "project"
 
-**Preferred option:** _____________
+**Preferred option:** _B_
 
 ---
 
@@ -48,18 +48,18 @@ A place to post new creative work without the "everyday" commitment.
 - [ ] Sketches
 - [ ] Output
 - [ ] Stream
-- [ ] Other: _____________
+- [*] Other: These are the right direction. Let's keep going. 
 
 **Content types to support:**
-- [ ] Images (static)
-- [ ] GIFs / animations
-- [ ] Videos (embedded)
-- [ ] Audio
-- [ ] Written pieces
-- [ ] Mixed/other
+- [*] Images (static)
+- [*] GIFs / animations
+- [*] Videos (embedded)
+- [*] Audio
+- [*] Written pieces
+- [*] Mixed/other
 
 **Post frequency:**
-- [ ] Whenever inspiration strikes
+- [*] Whenever inspiration strikes
 - [ ] Weekly-ish
 - [ ] Monthly-ish
 
@@ -67,7 +67,7 @@ A place to post new creative work without the "everyday" commitment.
 - [ ] Grid (like everyday)
 - [ ] Feed/stream (like blog)
 - [ ] Mixed (images in grid, writing in list)
-- [ ] Other: _____________
+- [*] Other: Video game
 
 ---
 
@@ -89,7 +89,7 @@ C) **No WordPress changes**
    - Just restructure the Astro frontend
    - Everyday stays as-is in WP, displayed differently
 
-**Preferred option:** _____________
+**Preferred option:** Need to weigh pros and cons
 
 ---
 
@@ -120,21 +120,21 @@ Home | Work | Lab | Blog
         └── Client/commercial projects + Everydays archive
 ```
 
-**Preferred option:** _____________
+**Preferred option:** I want the navigation to be a video game type interaction. it will need to have a very simple fallback mechanism for switching between the top level sections. I don't know exactly what the top level sections should be. There has to be a "main" page where people land first. This would be like the "press start" or "level select" screen in a video game. There would definitely be sections for my information (bio, avatar, skills, inventory, etc), my work/projects, my writing, and a "codex" with detailed information about the world of the video game (our world).
 
 ---
 
 ## Questions to Answer
 
-1. Is "everyday" content meaningfully different from "work" content, or just frequency?
+1. Is "everyday" content meaningfully different from "work" content, or just frequency? A: Yes, it's a specific type of content I made everyday outside of my professional work. But I don't want to present it as an everyday thing anymore. I still want to make that type of content but not on a schedule and even more varied.
 
-2. Should the new section feel casual (stream/lab) or polished (portfolio)?
+2. Should the new section feel casual (stream/lab) or polished (portfolio)? A: It definitely shouldn't feel casual. There's a culture war and creativity and free expression are being targeted by people who want to control with fear. It should feel like a lab doing vital creative research and transmitting to anyone listening.
 
-3. Do you want to categorize/tag new posts, or keep it simple?
+3. Do you want to categorize/tag new posts, or keep it simple? A: Let's keep it simple for now. I'm not sure what I'll actually do yet.
 
-4. Should old everyday posts be migrated to the new system, or stay separate?
+4. Should old everyday posts be migrated to the new system, or stay separate? A: They should stay as a separate project that has ended.
 
-5. Any features the new section needs that everyday doesn't have?
+5. Any features the new section needs that everyday doesn't have? A: an interactive timeline view
    - Comments?
    - Likes/reactions?
    - RSS feed?
