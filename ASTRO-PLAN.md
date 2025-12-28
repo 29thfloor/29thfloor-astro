@@ -355,7 +355,7 @@ const { posts } = await getEverydayPosts(1, 50);
 
 ### 4.3 Single Everyday Post (Static with Dynamic Fallback)
 
-```astro
+```html/jsx
 ---
 // src/pages/everyday/[slug].astro
 import Base from '../../layouts/Base.astro';
