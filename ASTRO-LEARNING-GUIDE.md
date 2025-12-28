@@ -636,7 +636,58 @@ export default defineConfig({
 
 ## 9. Deployment
 
-*[To be filled in when we deploy]*
+### Vercel Setup
+
+1. **Import repo**: Go to https://vercel.com/new and import `29thfloor/29thfloor-astro`
+2. **Environment variables**: Add `WORDPRESS_API_URL` = `https://29thfloor.com/wp-json/wp/v2`
+3. **Deploy**: Vercel auto-detects Astro and builds
+
+### vercel.json Configuration
+
+```json
+{
+  "framework": "astro",
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist",
+  "installCommand": "npm install",
+  "ignoreCommand": "git diff --quiet HEAD^ HEAD -- . ':!docs' ':!*.md'"
+}
+```
+
+The `ignoreCommand` skips builds when only documentation files change.
+
+### Preview Deployments
+
+Every PR branch gets an automatic preview deployment:
+- Push to a branch → Vercel creates preview URL
+- Merge to main → Vercel deploys to production
+
+### Git Workflow
+
+```
+main (production)
+  │
+  └── feature/my-feature (preview)
+```
+
+1. Create feature branch: `git checkout -b feature/my-feature`
+2. Make changes and commit
+3. Push: `git push -u origin feature/my-feature`
+4. Create PR: `gh pr create`
+5. Test on preview URL
+6. Merge PR: `gh pr merge --merge --delete-branch`
+
+### Merge Strategies
+
+| Strategy | What it does |
+|----------|--------------|
+| `--merge` | Keeps all commits, adds merge commit |
+| `--squash` | Combines all commits into one |
+| `--rebase` | Replays commits on top of main |
+
+### Production URL
+
+https://29thfloor-astro.vercel.app
 
 ---
 
@@ -674,4 +725,39 @@ npx astro check      # Type-check the project
 
 ## Session Log
 
-*[To be filled in as we work]*
+### December 27, 2025
+
+**Completed:**
+- Built all core pages (home, everyday, work, blog)
+- Implemented pagination for everyday archive (50 posts per page)
+- Added prev/next navigation to single everyday posts
+- Created GIF hover Web Component
+- Fixed URL encoding for special characters in slugs
+- Added Tailwind Typography plugin for blog content
+- Created shared `decodeEntities` utility for HTML entities
+- Deployed to Vercel (https://29thfloor-astro.vercel.app)
+- Set up feature branch workflow with PRs
+- Configured Vercel to skip builds for docs-only changes
+
+**Files created:**
+- `src/layouts/Base.astro` - Base HTML layout
+- `src/pages/index.astro` - Home page
+- `src/pages/everyday/[...page].astro` - Paginated archive
+- `src/pages/everyday/[slug].astro` - Single post
+- `src/pages/work/index.astro` - Work archive
+- `src/pages/work/[slug].astro` - Single work post
+- `src/pages/blog/index.astro` - Blog archive
+- `src/pages/blog/[slug].astro` - Single blog post
+- `src/components/EverydayCard.astro` - Card component
+- `src/lib/api.ts` - WordPress API client
+- `src/lib/utils.ts` - Shared utilities
+- `src/styles/global.css` - Tailwind theme
+- `public/js/components/gif-hover.js` - Web Component
+- `vercel.json` - Vercel configuration
+
+**Lessons learned:**
+- Import CSS in Astro frontmatter, not in `<style>` tags
+- Restart dev server when adding new Tailwind classes
+- Use `is:global` for styles targeting `set:html` content
+- Decode URL-encoded slugs from WordPress API
+- Use feature branches + PRs instead of committing to main
