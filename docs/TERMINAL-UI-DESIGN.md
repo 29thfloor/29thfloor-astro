@@ -47,6 +47,49 @@ Consider adding:
 
 ---
 
+## ASCII Art
+
+### Logo
+
+**Option A — Clean block:**
+
+```
+██████╗  ██████╗ ███████╗
+╚════██╗██╔═══██╗██╔════╝
+ █████╔╝╚██████╔╝█████╗
+██╔═══╝  ╚═══██║ ██╔══╝
+███████╗ █████╔╝ ██║     ███
+╚══════╝ ╚════╝  ╚═╝
+```
+
+**Option B — ACiD/BBS style with shading:**
+
+```
+
+      ░▒▓██████▓▒  ▒▓██████▓▒░  ▒▓████████▓▒░
+      ░░░░░░▒▓██▌  ▓██▒░░▒██▓   ▓██▒░░░░░░░
+           ░▓██▌  ░▓██░  ▓██▒   ▓██▒
+      ░▒▓█████▓░   ▒▓█████▓▒    ▓█████▓▒░
+      ▓██▒░░░░░      ░░░▓██▒    ▓██▒░░░░
+      ▓██▓▓▓▓▓▓▒░  ▒▓█████▓░    ▓██▒       ▓▓▓▓▓▓▓▓▓▓▓▓
+      ░▀▀▀▀▀▀▀▀░   ░▀▀▀▀▀▀░     ░▀▀        ▀▀▀▀▀▀▀▀▀▀▀▀
+
+```
+
+Reference: ACiD Productions, iCE, 90s BBS ANSI art scene.
+
+The underscore block blinks via CSS animation.
+
+### Section Headers
+
+_TODO: Add ASCII headers for each section_
+
+### Decorative Elements
+
+_TODO: Add dividers, corners, borders_
+
+---
+
 ## Site Structure
 
 ```
