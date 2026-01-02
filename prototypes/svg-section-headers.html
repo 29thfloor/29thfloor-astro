@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SVG Section Headers</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: #011518;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 3rem 2rem;
+      gap: 4rem;
+      font-family: 'Fira Code', monospace;
+    }
+
+    h2 {
+      color: #26A69A;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+      opacity: 0.6;
+    }
+
+    .demo-section {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2rem;
+    }
+
+    .headers-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 2rem;
+      justify-content: center;
+    }
+
+    .header-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .header-item span {
+      color: #0C3A38;
+      font-size: 0.625rem;
+    }
+
+    .header-svg {
+      filter: drop-shadow(0 0 6px rgba(38, 166, 154, 0.4));
+    }
+
+    /* Shading levels */
+    .b100 { fill: #26A69A; }
+    .b80 { fill: #1D7A74; }
+    .b60 { fill: #176A65; }
+    .b40 { fill: #115A56; }
+    .b20 { fill: #0A4A47; }
+    .b10 { fill: #063A38; }
+
+    /* Hover glow */
+    .header-svg {
+      transition: filter 0.3s ease;
+      cursor: pointer;
+    }
+    .header-svg:hover {
+      filter: drop-shadow(0 0 12px rgba(38, 166, 154, 0.7))
+              drop-shadow(0 0 24px rgba(38, 166, 154, 0.3));
+    }
+
+    /* Scanlines */
+    .scanlines {
+      position: relative;
+    }
+    .scanlines::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(0, 0, 0, 0.1) 2px,
+        rgba(0, 0, 0, 0.1) 4px
+      );
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Style 1: Underline accent -->
+  <div class="demo-section">
+    <h2>Style 1: Underline with gradient fade</h2>
+    <div class="headers-row">
+      <div class="header-item">
+        <svg class="header-svg" width="160" height="40" viewBox="0 0 32 8">
+          <!-- P -->
+          <rect class="b100" x="1" y="1" width="1" height="4"/>
+          <rect class="b100" x="2" y="1" width="2" height="1"/>
+          <rect class="b80" x="4" y="1" width="1" height="1"/>
+          <rect class="b100" x="4" y="2" width="1" height="1"/>
+          <rect class="b100" x="2" y="3" width="2" height="1"/>
+          <rect class="b60" x="4" y="3" width="1" height="1"/>
+          <!-- R -->
+          <rect class="b100" x="6" y="1" width="1" height="4"/>
+          <rect class="b100" x="7" y="1" width="2" height="1"/>
+          <rect class="b80" x="9" y="1" width="1" height="1"/>
+          <rect class="b100" x="9" y="2" width="1" height="1"/>
+          <rect class="b100" x="7" y="3" width="2" height="1"/>
+          <rect class="b100" x="9" y="4" width="1" height="1"/>
+          <!-- O -->
+          <rect class="b80" x="11" y="1" width="1" height="1"/>
+          <rect class="b100" x="12" y="1" width="2" height="1"/>
+          <rect class="b80" x="14" y="1" width="1" height="1"/>
+          <rect class="b100" x="11" y="2" width="1" height="2"/>
+          <rect class="b100" x="14" y="2" width="1" height="2"/>
+          <rect class="b80" x="11" y="4" width="1" height="1"/>
+          <rect class="b100" x="12" y="4" width="2" height="1"/>
+          <rect class="b80" x="14" y="4" width="1" height="1"/>
+          <!-- F -->
+          <rect class="b100" x="16" y="1" width="1" height="4"/>
+          <rect class="b100" x="17" y="1" width="3" height="1"/>
+          <rect class="b100" x="17" y="3" width="2" height="1"/>
+          <!-- I -->
+          <rect class="b100" x="21" y="1" width="1" height="4"/>
+          <!-- L -->
+          <rect class="b100" x="23" y="1" width="1" height="4"/>
+          <rect class="b100" x="24" y="4" width="2" height="1"/>
+          <!-- E -->
+          <rect class="b100" x="27" y="1" width="1" height="4"/>
+          <rect class="b100" x="28" y="1" width="2" height="1"/>
+          <rect class="b100" x="28" y="3" width="2" height="1"/>
+          <rect class="b100" x="28" y="4" width="2" height="1"/>
+          <!-- Underline gradient -->
+          <rect class="b10" x="0" y="6" width="2" height="1"/>
+          <rect class="b20" x="2" y="6" width="2" height="1"/>
+          <rect class="b40" x="4" y="6" width="3" height="1"/>
+          <rect class="b60" x="7" y="6" width="4" height="1"/>
+          <rect class="b80" x="11" y="6" width="5" height="1"/>
+          <rect class="b100" x="16" y="6" width="6" height="1"/>
+          <rect class="b80" x="22" y="6" width="4" height="1"/>
+          <rect class="b60" x="26" y="6" width="3" height="1"/>
+          <rect class="b40" x="29" y="6" width="2" height="1"/>
+          <rect class="b20" x="31" y="6" width="1" height="1"/>
+        </svg>
+        <span>PROFILE</span>
+      </div>
+
+      <div class="header-item">
+        <svg class="header-svg" width="140" height="40" viewBox="0 0 28 8">
+          <!-- C -->
+          <rect class="b80" x="1" y="1" width="1" height="1"/>
+          <rect class="b100" x="2" y="1" width="2" height="1"/>
+          <rect class="b80" x="4" y="1" width="1" height="1"/>
+          <rect class="b100" x="1" y="2" width="1" height="2"/>
+          <rect class="b80" x="1" y="4" width="1" height="1"/>
+          <rect class="b100" x="2" y="4" width="2" height="1"/>
+          <rect class="b80" x="4" y="4" width="1" height="1"/>
+          <!-- O -->
+          <rect class="b80" x="6" y="1" width="1" height="1"/>
+          <rect class="b100" x="7" y="1" width="2" height="1"/>
+          <rect class="b80" x="9" y="1" width="1" height="1"/>
+          <rect class="b100" x="6" y="2" width="1" height="2"/>
+          <rect class="b100" x="9" y="2" width="1" height="2"/>
+          <rect class="b80" x="6" y="4" width="1" height="1"/>
+          <rect class="b100" x="7" y="4" width="2" height="1"/>
+          <rect class="b80" x="9" y="4" width="1" height="1"/>
+          <!-- D -->
+          <rect class="b100" x="11" y="1" width="1" height="4"/>
+          <rect class="b100" x="12" y="1" width="2" height="1"/>
+          <rect class="b80" x="14" y="1" width="1" height="1"/>
+          <rect class="b100" x="14" y="2" width="1" height="2"/>
+          <rect class="b100" x="12" y="4" width="2" height="1"/>
+          <rect class="b80" x="14" y="4" width="1" height="1"/>
+          <!-- E -->
+          <rect class="b100" x="16" y="1" width="1" height="4"/>
+          <rect class="b100" x="17" y="1" width="2" height="1"/>
+          <rect class="b100" x="17" y="3" width="2" height="1"/>
+          <rect class="b100" x="17" y="4" width="2" height="1"/>
+          <!-- X -->
+          <rect class="b100" x="20" y="1" width="1" height="1"/>
+          <rect class="b100" x="24" y="1" width="1" height="1"/>
+          <rect class="b100" x="21" y="2" width="1" height="1"/>
+          <rect class="b100" x="23" y="2" width="1" height="1"/>
+          <rect class="b100" x="22" y="3" width="1" height="1"/>
+          <rect class="b100" x="21" y="3" width="1" height="1"/>
+          <rect class="b100" x="23" y="3" width="1" height="1"/>
+          <rect class="b100" x="20" y="4" width="1" height="1"/>
+          <rect class="b100" x="24" y="4" width="1" height="1"/>
+          <!-- Underline gradient -->
+          <rect class="b10" x="0" y="6" width="2" height="1"/>
+          <rect class="b20" x="2" y="6" width="2" height="1"/>
+          <rect class="b40" x="4" y="6" width="3" height="1"/>
+          <rect class="b60" x="7" y="6" width="4" height="1"/>
+          <rect class="b80" x="11" y="6" width="5" height="1"/>
+          <rect class="b100" x="16" y="6" width="5" height="1"/>
+          <rect class="b80" x="21" y="6" width="3" height="1"/>
+          <rect class="b60" x="24" y="6" width="2" height="1"/>
+          <rect class="b40" x="26" y="6" width="1" height="1"/>
+          <rect class="b20" x="27" y="6" width="1" height="1"/>
+        </svg>
+        <span>CODEX</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Style 2: Left accent bar -->
+  <div class="demo-section">
+    <h2>Style 2: Left accent bar with fade</h2>
+    <div class="headers-row">
+      <div class="header-item">
+        <svg class="header-svg" width="180" height="50" viewBox="0 0 36 10">
+          <!-- Left bar -->
+          <rect class="b100" x="0" y="0" width="2" height="8"/>
+          <rect class="b80" x="0" y="8" width="2" height="1"/>
+          <rect class="b40" x="0" y="9" width="2" height="1"/>
+          <!-- P -->
+          <rect class="b100" x="4" y="2" width="1" height="5"/>
+          <rect class="b100" x="5" y="2" width="2" height="1"/>
+          <rect class="b80" x="7" y="2" width="1" height="1"/>
+          <rect class="b100" x="7" y="3" width="1" height="1"/>
+          <rect class="b100" x="5" y="4" width="2" height="1"/>
+          <!-- R -->
+          <rect class="b100" x="9" y="2" width="1" height="5"/>
+          <rect class="b100" x="10" y="2" width="2" height="1"/>
+          <rect class="b80" x="12" y="2" width="1" height="1"/>
+          <rect class="b100" x="12" y="3" width="1" height="1"/>
+          <rect class="b100" x="10" y="4" width="2" height="1"/>
+          <rect class="b100" x="12" y="5" width="1" height="2"/>
+          <!-- O -->
+          <rect class="b60" x="14" y="2" width="1" height="1"/>
+          <rect class="b100" x="15" y="2" width="2" height="1"/>
+          <rect class="b60" x="17" y="2" width="1" height="1"/>
+          <rect class="b100" x="14" y="3" width="1" height="3"/>
+          <rect class="b100" x="17" y="3" width="1" height="3"/>
+          <rect class="b60" x="14" y="6" width="1" height="1"/>
+          <rect class="b100" x="15" y="6" width="2" height="1"/>
+          <rect class="b60" x="17" y="6" width="1" height="1"/>
+          <!-- J -->
+          <rect class="b100" x="22" y="2" width="1" height="4"/>
+          <rect class="b100" x="20" y="5" width="1" height="1"/>
+          <rect class="b100" x="21" y="6" width="1" height="1"/>
+          <rect class="b60" x="20" y="6" width="1" height="1"/>
+          <!-- E -->
+          <rect class="b100" x="24" y="2" width="1" height="5"/>
+          <rect class="b100" x="25" y="2" width="2" height="1"/>
+          <rect class="b100" x="25" y="4" width="2" height="1"/>
+          <rect class="b100" x="25" y="6" width="2" height="1"/>
+          <!-- C -->
+          <rect class="b60" x="28" y="2" width="1" height="1"/>
+          <rect class="b100" x="29" y="2" width="2" height="1"/>
+          <rect class="b100" x="28" y="3" width="1" height="3"/>
+          <rect class="b60" x="28" y="6" width="1" height="1"/>
+          <rect class="b100" x="29" y="6" width="2" height="1"/>
+          <!-- T -->
+          <rect class="b100" x="32" y="2" width="3" height="1"/>
+          <rect class="b100" x="33" y="3" width="1" height="4"/>
+          <!-- S -->
+          <rect class="b100" x="36" y="2" width="3" height="1"/>
+        </svg>
+        <span>PROJECTS</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Style 3: Full block letters like logo -->
+  <div class="demo-section scanlines">
+    <h2>Style 3: Full block letters (like logo)</h2>
+    <div class="headers-row">
+      <div class="header-item">
+        <svg class="header-svg" width="280" height="60" viewBox="0 0 56 12">
+          <defs>
+            <linearGradient id="header-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%">
+                <animate attributeName="stop-color" values="#26A69A;#FFD600;#26A69A" dur="4s" repeatCount="indefinite"/>
+              </stop>
+              <stop offset="100%">
+                <animate attributeName="stop-color" values="#FFD600;#26A69A;#FFD600" dur="4s" repeatCount="indefinite"/>
+              </stop>
+            </linearGradient>
+            <mask id="profile-mask">
+              <!-- P -->
+              <rect fill="#fff" x="1" y="1" width="2" height="8"/>
+              <rect fill="#fff" x="3" y="1" width="4" height="2"/>
+              <rect fill="#ccc" x="7" y="1" width="1" height="1"/>
+              <rect fill="#fff" x="7" y="2" width="1" height="2"/>
+              <rect fill="#ccc" x="7" y="4" width="1" height="1"/>
+              <rect fill="#fff" x="3" y="4" width="4" height="2"/>
+              <rect fill="#666" x="3" y="6" width="2" height="1"/>
+              <!-- R -->
+              <rect fill="#fff" x="10" y="1" width="2" height="8"/>
+              <rect fill="#fff" x="12" y="1" width="4" height="2"/>
+              <rect fill="#ccc" x="16" y="1" width="1" height="1"/>
+              <rect fill="#fff" x="16" y="2" width="1" height="2"/>
+              <rect fill="#ccc" x="16" y="4" width="1" height="1"/>
+              <rect fill="#fff" x="12" y="4" width="4" height="2"/>
+              <rect fill="#fff" x="15" y="6" width="2" height="3"/>
+              <rect fill="#666" x="12" y="6" width="2" height="1"/>
+              <!-- O -->
+              <rect fill="#666" x="19" y="1" width="1" height="1"/>
+              <rect fill="#fff" x="20" y="1" width="4" height="2"/>
+              <rect fill="#666" x="24" y="1" width="1" height="1"/>
+              <rect fill="#fff" x="19" y="2" width="1" height="5"/>
+              <rect fill="#fff" x="24" y="2" width="1" height="5"/>
+              <rect fill="#666" x="19" y="7" width="1" height="2"/>
+              <rect fill="#fff" x="20" y="7" width="4" height="2"/>
+              <rect fill="#666" x="24" y="7" width="1" height="2"/>
+              <!-- F -->
+              <rect fill="#fff" x="27" y="1" width="2" height="8"/>
+              <rect fill="#fff" x="29" y="1" width="5" height="2"/>
+              <rect fill="#ccc" x="34" y="1" width="1" height="1"/>
+              <rect fill="#fff" x="29" y="4" width="4" height="2"/>
+              <rect fill="#666" x="29" y="6" width="2" height="1"/>
+              <!-- I -->
+              <rect fill="#fff" x="37" y="1" width="2" height="8"/>
+              <rect fill="#666" x="36" y="1" width="1" height="1"/>
+              <rect fill="#666" x="39" y="1" width="1" height="1"/>
+              <!-- L -->
+              <rect fill="#fff" x="42" y="1" width="2" height="8"/>
+              <rect fill="#fff" x="44" y="7" width="4" height="2"/>
+              <rect fill="#ccc" x="48" y="8" width="1" height="1"/>
+              <!-- E -->
+              <rect fill="#fff" x="50" y="1" width="2" height="8"/>
+              <rect fill="#fff" x="52" y="1" width="4" height="2"/>
+              <rect fill="#fff" x="52" y="4" width="3" height="2"/>
+              <rect fill="#fff" x="52" y="7" width="4" height="2"/>
+              <rect fill="#ccc" x="55" y="2" width="1" height="1"/>
+            </mask>
+          </defs>
+          <rect x="0" y="0" width="56" height="12" fill="url(#header-gradient)" mask="url(#profile-mask)"/>
+        </svg>
+        <span>PROFILE (gradient)</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Style 4: Compact with arrow -->
+  <div class="demo-section">
+    <h2>Style 4: Compact with selection arrow</h2>
+    <div class="headers-row" style="flex-direction: column; align-items: flex-start; gap: 1rem;">
+      <div class="header-item" style="flex-direction: row; gap: 0.5rem;">
+        <svg class="header-svg" width="30" height="30" viewBox="0 0 6 6">
+          <!-- Arrow -->
+          <rect class="b100" x="2" y="2" width="2" height="2"/>
+          <rect class="b80" x="4" y="1" width="1" height="1"/>
+          <rect class="b100" x="4" y="2" width="1" height="2"/>
+          <rect class="b80" x="4" y="4" width="1" height="1"/>
+          <rect class="b60" x="5" y="2" width="1" height="2"/>
+        </svg>
+        <svg class="header-svg" width="140" height="30" viewBox="0 0 28 6">
+          <!-- PROFILE text smaller -->
+          <rect class="b100" x="0" y="1" width="1" height="4"/>
+          <rect class="b100" x="1" y="1" width="2" height="1"/>
+          <rect class="b100" x="3" y="1" width="1" height="2"/>
+          <rect class="b100" x="1" y="2" width="2" height="1"/>
+          <!-- R -->
+          <rect class="b100" x="5" y="1" width="1" height="4"/>
+          <rect class="b100" x="6" y="1" width="2" height="1"/>
+          <rect class="b100" x="8" y="1" width="1" height="2"/>
+          <rect class="b100" x="6" y="2" width="2" height="1"/>
+          <rect class="b100" x="8" y="3" width="1" height="2"/>
+          <!-- O -->
+          <rect class="b80" x="10" y="1" width="1" height="1"/>
+          <rect class="b100" x="11" y="1" width="1" height="1"/>
+          <rect class="b80" x="12" y="1" width="1" height="1"/>
+          <rect class="b100" x="10" y="2" width="1" height="2"/>
+          <rect class="b100" x="12" y="2" width="1" height="2"/>
+          <rect class="b80" x="10" y="4" width="1" height="1"/>
+          <rect class="b100" x="11" y="4" width="1" height="1"/>
+          <rect class="b80" x="12" y="4" width="1" height="1"/>
+          <!-- F -->
+          <rect class="b100" x="14" y="1" width="1" height="4"/>
+          <rect class="b100" x="15" y="1" width="2" height="1"/>
+          <rect class="b100" x="15" y="2" width="1" height="1"/>
+          <!-- I -->
+          <rect class="b100" x="18" y="1" width="1" height="4"/>
+          <!-- L -->
+          <rect class="b100" x="20" y="1" width="1" height="4"/>
+          <rect class="b100" x="21" y="4" width="2" height="1"/>
+          <!-- E -->
+          <rect class="b100" x="24" y="1" width="1" height="4"/>
+          <rect class="b100" x="25" y="1" width="2" height="1"/>
+          <rect class="b100" x="25" y="2" width="1" height="1"/>
+          <rect class="b100" x="25" y="4" width="2" height="1"/>
+        </svg>
+      </div>
+      <div class="header-item" style="flex-direction: row; gap: 0.5rem; opacity: 0.4;">
+        <svg width="30" height="30" viewBox="0 0 6 6">
+          <!-- No arrow - inactive -->
+        </svg>
+        <svg class="header-svg" width="140" height="30" viewBox="0 0 28 6" style="filter: none;">
+          <!-- CODEX text dimmed -->
+          <rect class="b40" x="0" y="1" width="1" height="1"/>
+          <rect class="b60" x="1" y="1" width="2" height="1"/>
+          <rect class="b60" x="0" y="2" width="1" height="2"/>
+          <rect class="b40" x="0" y="4" width="1" height="1"/>
+          <rect class="b60" x="1" y="4" width="2" height="1"/>
+          <!-- O -->
+          <rect class="b40" x="4" y="1" width="1" height="1"/>
+          <rect class="b60" x="5" y="1" width="1" height="1"/>
+          <rect class="b40" x="6" y="1" width="1" height="1"/>
+          <rect class="b60" x="4" y="2" width="1" height="2"/>
+          <rect class="b60" x="6" y="2" width="1" height="2"/>
+          <rect class="b40" x="4" y="4" width="1" height="1"/>
+          <rect class="b60" x="5" y="4" width="1" height="1"/>
+          <rect class="b40" x="6" y="4" width="1" height="1"/>
+          <!-- D -->
+          <rect class="b60" x="8" y="1" width="1" height="4"/>
+          <rect class="b60" x="9" y="1" width="1" height="1"/>
+          <rect class="b40" x="10" y="1" width="1" height="1"/>
+          <rect class="b60" x="10" y="2" width="1" height="2"/>
+          <rect class="b60" x="9" y="4" width="1" height="1"/>
+          <rect class="b40" x="10" y="4" width="1" height="1"/>
+          <!-- E -->
+          <rect class="b60" x="12" y="1" width="1" height="4"/>
+          <rect class="b60" x="13" y="1" width="2" height="1"/>
+          <rect class="b60" x="13" y="2" width="1" height="1"/>
+          <rect class="b60" x="13" y="4" width="2" height="1"/>
+          <!-- X -->
+          <rect class="b60" x="16" y="1" width="1" height="1"/>
+          <rect class="b60" x="18" y="1" width="1" height="1"/>
+          <rect class="b60" x="17" y="2" width="1" height="2"/>
+          <rect class="b60" x="16" y="4" width="1" height="1"/>
+          <rect class="b60" x="18" y="4" width="1" height="1"/>
+        </svg>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>
