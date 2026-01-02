@@ -104,7 +104,13 @@ The logo is built with SVG using a block-based approach inspired by ASCII art:
 
 ### Section Headers
 
-_TODO: Add ASCII headers for each section_
+Working prototypes: [`prototypes/svg-section-headers.html`](../prototypes/svg-section-headers.html)
+
+**Styles explored:**
+1. **Underline with gradient fade** — Clean text with fading accent line
+2. **Left accent bar** — Vertical bar beside text
+3. **Full block letters** — Same as logo with animated gradient
+4. **Compact with arrow** — Menu-style with active/inactive states
 
 ### Decorative Elements
 
@@ -305,7 +311,7 @@ Optional text reveal animation:
 
 1. [x] Answer open questions — see Design Decisions above
 2. [x] Sketch ASCII art for key elements (logo) — see [SVG prototypes](../prototypes/svg-ascii-logo-v2.html)
-3. [ ] Create ASCII section headers
+3. [x] Create ASCII section headers — see [section header prototypes](../prototypes/svg-section-headers.html)
 4. [ ] Prototype terminal-frame Web Component
 5. [ ] Define content for PROFILE section (what stats/skills?)
 6. [ ] Plan CODEX topics
