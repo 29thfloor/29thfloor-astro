@@ -41,8 +41,9 @@ Dim:         #0C3A38 (teal-800) — Inactive/borders
 Highlight:   #1D7A74 (teal-600) — Hover states
 ```
 
-Consider adding:
-- `#FF0080` — Magenta/pink for alerts or special items
+Additional colors (used in prototypes):
+- `#00FFFF` — Cyan for glitch effects
+- `#FF0080` — Magenta/pink for glitch effects, alerts
 - `#00FF00` — Classic terminal green (optional throwback)
 
 ---
@@ -79,6 +80,27 @@ Consider adding:
 Reference: ACiD Productions, iCE, 90s BBS ANSI art scene.
 
 The underscore block blinks via CSS animation.
+
+### SVG Logo Implementation
+
+Working prototypes: [`prototypes/svg-ascii-logo-v2.html`](../prototypes/svg-ascii-logo-v2.html)
+
+The logo is built with SVG using a block-based approach inspired by ASCII art:
+
+**Technical approach:**
+- Each "character" composed of small rectangles on a grid
+- 6 shading levels for depth (b100, b80, b60, b40, b20, b10)
+- Grayscale SVG masks where brightness = opacity
+- Allows gradients, animations, and effects while maintaining the blocky aesthetic
+
+**Effects implemented:**
+1. **Glow on hover** — CSS `drop-shadow` with increased intensity
+2. **Animated gradient** — SVG `<animate>` cycling through teal → yellow → magenta → cyan
+3. **Glitch/chromatic aberration** — Cyan and magenta offset clones on hover
+4. **Scanlines** — CSS pseudo-element overlay
+5. **Interactive colors** — JavaScript color picker with pulse animation
+
+**Preferred combination:** Animated gradient + scanlines + glitch on hover (Demo 2)
 
 ### Section Headers
 
@@ -282,11 +304,12 @@ Optional text reveal animation:
 ## Next Steps
 
 1. [ ] Answer open questions above
-2. [ ] Sketch ASCII art for key elements (logo, section headers)
-3. [ ] Prototype terminal-frame Web Component
-4. [ ] Define content for PROFILE section (what stats/skills?)
-5. [ ] Plan CODEX topics
-6. [ ] Decide on sound design (yes/no/later)
+2. [x] Sketch ASCII art for key elements (logo) — see [SVG prototypes](../prototypes/svg-ascii-logo-v2.html)
+3. [ ] Create ASCII section headers
+4. [ ] Prototype terminal-frame Web Component
+5. [ ] Define content for PROFILE section (what stats/skills?)
+6. [ ] Plan CODEX topics
+7. [ ] Decide on sound design (yes/no/later)
 
 ---
 
