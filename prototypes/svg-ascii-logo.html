@@ -1,0 +1,1011 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SVG ASCII Logo - Proof of Concept</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: #011518;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 4rem;
+      font-family: 'Fira Code', monospace;
+      padding: 2rem;
+    }
+
+    h2 {
+      color: #26A69A;
+      font-size: 0.875rem;
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+    }
+
+    .demo-section {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    /* Base logo styles */
+    .logo-svg {
+      filter: drop-shadow(0 0 8px rgba(38, 166, 154, 0.5));
+    }
+
+    .block-full { fill: #26A69A; }
+    .block-dark { fill: #1D7A74; }
+    .block-medium { fill: #155A56; }
+    .block-light { fill: #0C3A38; }
+
+    /* Hover glow effect */
+    .logo-glow {
+      transition: filter 0.3s ease;
+    }
+    .logo-glow:hover {
+      filter: drop-shadow(0 0 20px rgba(38, 166, 154, 0.8))
+              drop-shadow(0 0 40px rgba(38, 166, 154, 0.4));
+    }
+
+    /* Underscore blink */
+    .underscore {
+      animation: blink 1s step-end infinite;
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0; }
+    }
+
+    /* Pulsing animation */
+    .logo-pulse .block-full {
+      animation: pulse 2s ease-in-out infinite;
+    }
+    .logo-pulse .block-dark {
+      animation: pulse 2s ease-in-out infinite 0.1s;
+    }
+    .logo-pulse .block-medium {
+      animation: pulse 2s ease-in-out infinite 0.2s;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+
+    /* Scanline overlay */
+    .scanlines {
+      position: relative;
+    }
+
+    .scanlines::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(0, 0, 0, 0.15) 2px,
+        rgba(0, 0, 0, 0.15) 4px
+      );
+      pointer-events: none;
+    }
+
+    /* Glitch effect */
+    .glitch-wrapper {
+      position: relative;
+    }
+
+    .glitch-clone {
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+
+    .glitch-clone.cyan .block-full,
+    .glitch-clone.cyan .block-dark,
+    .glitch-clone.cyan .block-medium,
+    .glitch-clone.cyan .block-light {
+      fill: #00FFFF;
+    }
+
+    .glitch-clone.magenta .block-full,
+    .glitch-clone.magenta .block-dark,
+    .glitch-clone.magenta .block-medium,
+    .glitch-clone.magenta .block-light {
+      fill: #FF0080;
+    }
+
+    .glitch-wrapper:hover .glitch-clone.cyan {
+      animation: glitch-cyan 0.3s ease-in-out infinite;
+    }
+
+    .glitch-wrapper:hover .glitch-clone.magenta {
+      animation: glitch-magenta 0.3s ease-in-out infinite;
+    }
+
+    @keyframes glitch-cyan {
+      0%, 100% { transform: translate(0, 0); opacity: 0; }
+      25% { transform: translate(-3px, 1px); opacity: 0.5; }
+      50% { transform: translate(2px, -1px); opacity: 0.3; }
+      75% { transform: translate(-1px, 2px); opacity: 0.5; }
+    }
+
+    @keyframes glitch-magenta {
+      0%, 100% { transform: translate(0, 0); opacity: 0; }
+      25% { transform: translate(3px, -1px); opacity: 0.5; }
+      50% { transform: translate(-2px, 1px); opacity: 0.3; }
+      75% { transform: translate(1px, -2px); opacity: 0.5; }
+    }
+
+    /* Gradient animation */
+    .logo-gradient .block-full { fill: url(#gradient-full); }
+    .logo-gradient .block-dark { fill: url(#gradient-dark); }
+    .logo-gradient .block-medium { fill: url(#gradient-medium); }
+
+    /* Controls */
+    .controls {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    button {
+      background: #0C3A38;
+      color: #26A69A;
+      border: 1px solid #26A69A;
+      padding: 0.5rem 1rem;
+      font-family: inherit;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    button:hover {
+      background: #26A69A;
+      color: #011518;
+    }
+
+    button.active {
+      background: #FFD600;
+      color: #011518;
+      border-color: #FFD600;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Shared defs for gradients -->
+  <svg width="0" height="0">
+    <defs>
+      <linearGradient id="gradient-full" x1="0%" y1="0%" x2="100%" y2="0%">
+        <stop offset="0%" stop-color="#26A69A">
+          <animate attributeName="stop-color" values="#26A69A;#FFD600;#FF0080;#26A69A" dur="4s" repeatCount="indefinite"/>
+        </stop>
+        <stop offset="100%" stop-color="#FFD600">
+          <animate attributeName="stop-color" values="#FFD600;#FF0080;#26A69A;#FFD600" dur="4s" repeatCount="indefinite"/>
+        </stop>
+      </linearGradient>
+      <linearGradient id="gradient-dark" x1="0%" y1="0%" x2="100%" y2="0%">
+        <stop offset="0%" stop-color="#1D7A74">
+          <animate attributeName="stop-color" values="#1D7A74;#CC9900;#CC0066;#1D7A74" dur="4s" repeatCount="indefinite"/>
+        </stop>
+        <stop offset="100%" stop-color="#CC9900">
+          <animate attributeName="stop-color" values="#CC9900;#CC0066;#1D7A74;#CC9900" dur="4s" repeatCount="indefinite"/>
+        </stop>
+      </linearGradient>
+      <linearGradient id="gradient-medium" x1="0%" y1="0%" x2="100%" y2="0%">
+        <stop offset="0%" stop-color="#155A56">
+          <animate attributeName="stop-color" values="#155A56;#997700;#990050;#155A56" dur="4s" repeatCount="indefinite"/>
+        </stop>
+        <stop offset="100%" stop-color="#997700">
+          <animate attributeName="stop-color" values="#997700;#990050;#155A56;#997700" dur="4s" repeatCount="indefinite"/>
+        </stop>
+      </linearGradient>
+    </defs>
+  </svg>
+
+  <!-- Demo 1: Basic SVG ASCII with glow -->
+  <div class="demo-section">
+    <h2>1. SVG with glow on hover</h2>
+    <svg class="logo-svg logo-glow" width="620" height="100" viewBox="0 0 62 10">
+      <!-- Row 1 -->
+      <rect class="block-light" x="6" y="0" width="1" height="1"/>
+      <rect class="block-medium" x="7" y="0" width="1" height="1"/>
+      <rect class="block-dark" x="8" y="0" width="1" height="1"/>
+      <rect class="block-full" x="9" y="0" width="6" height="1"/>
+      <rect class="block-dark" x="15" y="0" width="1" height="1"/>
+      <rect class="block-medium" x="16" y="0" width="1" height="1"/>
+
+      <rect class="block-medium" x="20" y="0" width="1" height="1"/>
+      <rect class="block-dark" x="21" y="0" width="1" height="1"/>
+      <rect class="block-full" x="22" y="0" width="6" height="1"/>
+      <rect class="block-dark" x="28" y="0" width="1" height="1"/>
+      <rect class="block-medium" x="29" y="0" width="1" height="1"/>
+      <rect class="block-light" x="30" y="0" width="1" height="1"/>
+
+      <rect class="block-medium" x="34" y="0" width="1" height="1"/>
+      <rect class="block-dark" x="35" y="0" width="1" height="1"/>
+      <rect class="block-full" x="36" y="0" width="8" height="1"/>
+      <rect class="block-dark" x="44" y="0" width="1" height="1"/>
+      <rect class="block-medium" x="45" y="0" width="1" height="1"/>
+      <rect class="block-light" x="46" y="0" width="1" height="1"/>
+
+      <!-- Row 2 -->
+      <rect class="block-light" x="6" y="1" width="6" height="1"/>
+      <rect class="block-medium" x="12" y="1" width="1" height="1"/>
+      <rect class="block-dark" x="13" y="1" width="1" height="1"/>
+      <rect class="block-full" x="14" y="1" width="3" height="1"/>
+
+      <rect class="block-full" x="20" y="1" width="3" height="1"/>
+      <rect class="block-dark" x="23" y="1" width="1" height="1"/>
+      <rect class="block-medium" x="24" y="1" width="1" height="1"/>
+      <rect class="block-light" x="25" y="1" width="1" height="1"/>
+      <rect class="block-medium" x="26" y="1" width="1" height="1"/>
+      <rect class="block-dark" x="27" y="1" width="1" height="1"/>
+      <rect class="block-full" x="28" y="1" width="3" height="1"/>
+
+      <rect class="block-full" x="34" y="1" width="3" height="1"/>
+      <rect class="block-dark" x="37" y="1" width="1" height="1"/>
+      <rect class="block-medium" x="38" y="1" width="1" height="1"/>
+      <rect class="block-light" x="39" y="1" width="7" height="1"/>
+
+      <!-- Row 3 -->
+      <rect class="block-light" x="11" y="2" width="1" height="1"/>
+      <rect class="block-medium" x="12" y="2" width="1" height="1"/>
+      <rect class="block-dark" x="13" y="2" width="1" height="1"/>
+      <rect class="block-full" x="14" y="2" width="3" height="1"/>
+
+      <rect class="block-light" x="20" y="2" width="1" height="1"/>
+      <rect class="block-medium" x="21" y="2" width="1" height="1"/>
+      <rect class="block-dark" x="22" y="2" width="1" height="1"/>
+      <rect class="block-full" x="23" y="2" width="2" height="1"/>
+      <rect class="block-light" x="25" y="2" width="1" height="1"/>
+      <rect class="block-medium" x="26" y="2" width="1" height="1"/>
+      <rect class="block-dark" x="27" y="2" width="1" height="1"/>
+      <rect class="block-full" x="28" y="2" width="2" height="1"/>
+
+      <rect class="block-full" x="34" y="2" width="3" height="1"/>
+      <rect class="block-dark" x="37" y="2" width="1" height="1"/>
+
+      <!-- Row 4 -->
+      <rect class="block-light" x="6" y="3" width="1" height="1"/>
+      <rect class="block-medium" x="7" y="3" width="1" height="1"/>
+      <rect class="block-dark" x="8" y="3" width="1" height="1"/>
+      <rect class="block-full" x="9" y="3" width="5" height="1"/>
+      <rect class="block-dark" x="14" y="3" width="1" height="1"/>
+      <rect class="block-medium" x="15" y="3" width="1" height="1"/>
+      <rect class="block-light" x="16" y="3" width="1" height="1"/>
+
+      <rect class="block-medium" x="21" y="3" width="1" height="1"/>
+      <rect class="block-dark" x="22" y="3" width="1" height="1"/>
+      <rect class="block-full" x="23" y="3" width="5" height="1"/>
+      <rect class="block-dark" x="28" y="3" width="1" height="1"/>
+      <rect class="block-medium" x="29" y="3" width="1" height="1"/>
+
+      <rect class="block-full" x="34" y="3" width="5" height="1"/>
+      <rect class="block-dark" x="39" y="3" width="1" height="1"/>
+      <rect class="block-medium" x="40" y="3" width="1" height="1"/>
+      <rect class="block-light" x="41" y="3" width="1" height="1"/>
+
+      <!-- Row 5 -->
+      <rect class="block-full" x="6" y="4" width="3" height="1"/>
+      <rect class="block-dark" x="9" y="4" width="1" height="1"/>
+      <rect class="block-medium" x="10" y="4" width="1" height="1"/>
+      <rect class="block-light" x="11" y="4" width="5" height="1"/>
+
+      <rect class="block-light" x="23" y="4" width="3" height="1"/>
+      <rect class="block-medium" x="26" y="4" width="1" height="1"/>
+      <rect class="block-dark" x="27" y="4" width="1" height="1"/>
+      <rect class="block-full" x="28" y="4" width="3" height="1"/>
+
+      <rect class="block-full" x="34" y="4" width="3" height="1"/>
+      <rect class="block-dark" x="37" y="4" width="1" height="1"/>
+      <rect class="block-medium" x="38" y="4" width="1" height="1"/>
+      <rect class="block-light" x="39" y="4" width="4" height="1"/>
+
+      <!-- Row 6 -->
+      <rect class="block-full" x="6" y="5" width="3" height="1"/>
+      <rect class="block-dark" x="9" y="5" width="6" height="1"/>
+      <rect class="block-medium" x="15" y="5" width="1" height="1"/>
+      <rect class="block-light" x="16" y="5" width="1" height="1"/>
+
+      <rect class="block-medium" x="20" y="5" width="1" height="1"/>
+      <rect class="block-dark" x="21" y="5" width="1" height="1"/>
+      <rect class="block-full" x="22" y="5" width="6" height="1"/>
+      <rect class="block-dark" x="28" y="5" width="1" height="1"/>
+      <rect class="block-medium" x="29" y="5" width="1" height="1"/>
+      <rect class="block-light" x="30" y="5" width="1" height="1"/>
+
+      <rect class="block-full" x="34" y="5" width="3" height="1"/>
+
+      <!-- Underscore -->
+      <rect class="block-full underscore" x="50" y="5" width="8" height="1"/>
+      <rect class="block-dark underscore" x="58" y="5" width="2" height="1"/>
+
+      <!-- Row 7 (bottom edge) -->
+      <rect class="block-light" x="6" y="6" width="1" height="1"/>
+      <rect class="block-medium" x="7" y="6" width="7" height="1"/>
+      <rect class="block-light" x="14" y="6" width="1" height="1"/>
+
+      <rect class="block-light" x="21" y="6" width="1" height="1"/>
+      <rect class="block-medium" x="22" y="6" width="6" height="1"/>
+      <rect class="block-light" x="28" y="6" width="1" height="1"/>
+
+      <rect class="block-light" x="34" y="6" width="1" height="1"/>
+      <rect class="block-medium" x="35" y="6" width="2" height="1"/>
+
+      <rect class="block-medium underscore" x="50" y="6" width="10" height="1"/>
+    </svg>
+  </div>
+
+  <!-- Demo 2: Animated gradient -->
+  <div class="demo-section">
+    <h2>2. Animated gradient fill</h2>
+    <svg class="logo-svg logo-gradient" width="620" height="100" viewBox="0 0 62 10">
+      <!-- Row 1 -->
+      <rect class="block-light" x="6" y="0" width="1" height="1"/>
+      <rect class="block-medium" x="7" y="0" width="1" height="1"/>
+      <rect class="block-dark" x="8" y="0" width="1" height="1"/>
+      <rect class="block-full" x="9" y="0" width="6" height="1"/>
+      <rect class="block-dark" x="15" y="0" width="1" height="1"/>
+      <rect class="block-medium" x="16" y="0" width="1" height="1"/>
+
+      <rect class="block-medium" x="20" y="0" width="1" height="1"/>
+      <rect class="block-dark" x="21" y="0" width="1" height="1"/>
+      <rect class="block-full" x="22" y="0" width="6" height="1"/>
+      <rect class="block-dark" x="28" y="0" width="1" height="1"/>
+      <rect class="block-medium" x="29" y="0" width="1" height="1"/>
+      <rect class="block-light" x="30" y="0" width="1" height="1"/>
+
+      <rect class="block-medium" x="34" y="0" width="1" height="1"/>
+      <rect class="block-dark" x="35" y="0" width="1" height="1"/>
+      <rect class="block-full" x="36" y="0" width="8" height="1"/>
+      <rect class="block-dark" x="44" y="0" width="1" height="1"/>
+      <rect class="block-medium" x="45" y="0" width="1" height="1"/>
+      <rect class="block-light" x="46" y="0" width="1" height="1"/>
+
+      <!-- Row 2 -->
+      <rect class="block-light" x="6" y="1" width="6" height="1"/>
+      <rect class="block-medium" x="12" y="1" width="1" height="1"/>
+      <rect class="block-dark" x="13" y="1" width="1" height="1"/>
+      <rect class="block-full" x="14" y="1" width="3" height="1"/>
+
+      <rect class="block-full" x="20" y="1" width="3" height="1"/>
+      <rect class="block-dark" x="23" y="1" width="1" height="1"/>
+      <rect class="block-medium" x="24" y="1" width="1" height="1"/>
+      <rect class="block-light" x="25" y="1" width="1" height="1"/>
+      <rect class="block-medium" x="26" y="1" width="1" height="1"/>
+      <rect class="block-dark" x="27" y="1" width="1" height="1"/>
+      <rect class="block-full" x="28" y="1" width="3" height="1"/>
+
+      <rect class="block-full" x="34" y="1" width="3" height="1"/>
+      <rect class="block-dark" x="37" y="1" width="1" height="1"/>
+      <rect class="block-medium" x="38" y="1" width="1" height="1"/>
+      <rect class="block-light" x="39" y="1" width="7" height="1"/>
+
+      <!-- Row 3 -->
+      <rect class="block-light" x="11" y="2" width="1" height="1"/>
+      <rect class="block-medium" x="12" y="2" width="1" height="1"/>
+      <rect class="block-dark" x="13" y="2" width="1" height="1"/>
+      <rect class="block-full" x="14" y="2" width="3" height="1"/>
+
+      <rect class="block-light" x="20" y="2" width="1" height="1"/>
+      <rect class="block-medium" x="21" y="2" width="1" height="1"/>
+      <rect class="block-dark" x="22" y="2" width="1" height="1"/>
+      <rect class="block-full" x="23" y="2" width="2" height="1"/>
+      <rect class="block-light" x="25" y="2" width="1" height="1"/>
+      <rect class="block-medium" x="26" y="2" width="1" height="1"/>
+      <rect class="block-dark" x="27" y="2" width="1" height="1"/>
+      <rect class="block-full" x="28" y="2" width="2" height="1"/>
+
+      <rect class="block-full" x="34" y="2" width="3" height="1"/>
+      <rect class="block-dark" x="37" y="2" width="1" height="1"/>
+
+      <!-- Row 4 -->
+      <rect class="block-light" x="6" y="3" width="1" height="1"/>
+      <rect class="block-medium" x="7" y="3" width="1" height="1"/>
+      <rect class="block-dark" x="8" y="3" width="1" height="1"/>
+      <rect class="block-full" x="9" y="3" width="5" height="1"/>
+      <rect class="block-dark" x="14" y="3" width="1" height="1"/>
+      <rect class="block-medium" x="15" y="3" width="1" height="1"/>
+      <rect class="block-light" x="16" y="3" width="1" height="1"/>
+
+      <rect class="block-medium" x="21" y="3" width="1" height="1"/>
+      <rect class="block-dark" x="22" y="3" width="1" height="1"/>
+      <rect class="block-full" x="23" y="3" width="5" height="1"/>
+      <rect class="block-dark" x="28" y="3" width="1" height="1"/>
+      <rect class="block-medium" x="29" y="3" width="1" height="1"/>
+
+      <rect class="block-full" x="34" y="3" width="5" height="1"/>
+      <rect class="block-dark" x="39" y="3" width="1" height="1"/>
+      <rect class="block-medium" x="40" y="3" width="1" height="1"/>
+      <rect class="block-light" x="41" y="3" width="1" height="1"/>
+
+      <!-- Row 5 -->
+      <rect class="block-full" x="6" y="4" width="3" height="1"/>
+      <rect class="block-dark" x="9" y="4" width="1" height="1"/>
+      <rect class="block-medium" x="10" y="4" width="1" height="1"/>
+      <rect class="block-light" x="11" y="4" width="5" height="1"/>
+
+      <rect class="block-light" x="23" y="4" width="3" height="1"/>
+      <rect class="block-medium" x="26" y="4" width="1" height="1"/>
+      <rect class="block-dark" x="27" y="4" width="1" height="1"/>
+      <rect class="block-full" x="28" y="4" width="3" height="1"/>
+
+      <rect class="block-full" x="34" y="4" width="3" height="1"/>
+      <rect class="block-dark" x="37" y="4" width="1" height="1"/>
+      <rect class="block-medium" x="38" y="4" width="1" height="1"/>
+      <rect class="block-light" x="39" y="4" width="4" height="1"/>
+
+      <!-- Row 6 -->
+      <rect class="block-full" x="6" y="5" width="3" height="1"/>
+      <rect class="block-dark" x="9" y="5" width="6" height="1"/>
+      <rect class="block-medium" x="15" y="5" width="1" height="1"/>
+      <rect class="block-light" x="16" y="5" width="1" height="1"/>
+
+      <rect class="block-medium" x="20" y="5" width="1" height="1"/>
+      <rect class="block-dark" x="21" y="5" width="1" height="1"/>
+      <rect class="block-full" x="22" y="5" width="6" height="1"/>
+      <rect class="block-dark" x="28" y="5" width="1" height="1"/>
+      <rect class="block-medium" x="29" y="5" width="1" height="1"/>
+      <rect class="block-light" x="30" y="5" width="1" height="1"/>
+
+      <rect class="block-full" x="34" y="5" width="3" height="1"/>
+
+      <!-- Underscore -->
+      <rect class="block-full underscore" x="50" y="5" width="8" height="1"/>
+      <rect class="block-dark underscore" x="58" y="5" width="2" height="1"/>
+
+      <!-- Row 7 -->
+      <rect class="block-light" x="6" y="6" width="1" height="1"/>
+      <rect class="block-medium" x="7" y="6" width="7" height="1"/>
+      <rect class="block-light" x="14" y="6" width="1" height="1"/>
+
+      <rect class="block-light" x="21" y="6" width="1" height="1"/>
+      <rect class="block-medium" x="22" y="6" width="6" height="1"/>
+      <rect class="block-light" x="28" y="6" width="1" height="1"/>
+
+      <rect class="block-light" x="34" y="6" width="1" height="1"/>
+      <rect class="block-medium" x="35" y="6" width="2" height="1"/>
+
+      <rect class="block-medium underscore" x="50" y="6" width="10" height="1"/>
+    </svg>
+  </div>
+
+  <!-- Demo 3: Glitch on hover -->
+  <div class="demo-section">
+    <h2>3. Glitch on hover</h2>
+    <div class="glitch-wrapper">
+      <!-- Cyan clone -->
+      <svg class="logo-svg glitch-clone cyan" width="620" height="100" viewBox="0 0 62 10">
+        <rect class="block-full" x="9" y="0" width="6" height="1"/>
+        <rect class="block-full" x="14" y="1" width="3" height="1"/>
+        <rect class="block-full" x="14" y="2" width="3" height="1"/>
+        <rect class="block-full" x="9" y="3" width="5" height="1"/>
+        <rect class="block-full" x="6" y="4" width="3" height="1"/>
+        <rect class="block-full" x="6" y="5" width="3" height="1"/>
+
+        <rect class="block-full" x="22" y="0" width="6" height="1"/>
+        <rect class="block-full" x="20" y="1" width="3" height="1"/>
+        <rect class="block-full" x="28" y="1" width="3" height="1"/>
+        <rect class="block-full" x="23" y="2" width="2" height="1"/>
+        <rect class="block-full" x="28" y="2" width="2" height="1"/>
+        <rect class="block-full" x="23" y="3" width="5" height="1"/>
+        <rect class="block-full" x="28" y="4" width="3" height="1"/>
+        <rect class="block-full" x="22" y="5" width="6" height="1"/>
+
+        <rect class="block-full" x="36" y="0" width="8" height="1"/>
+        <rect class="block-full" x="34" y="1" width="3" height="1"/>
+        <rect class="block-full" x="34" y="2" width="3" height="1"/>
+        <rect class="block-full" x="34" y="3" width="5" height="1"/>
+        <rect class="block-full" x="34" y="4" width="3" height="1"/>
+        <rect class="block-full" x="34" y="5" width="3" height="1"/>
+
+        <rect class="block-full" x="50" y="5" width="8" height="1"/>
+      </svg>
+
+      <!-- Magenta clone -->
+      <svg class="logo-svg glitch-clone magenta" width="620" height="100" viewBox="0 0 62 10">
+        <rect class="block-full" x="9" y="0" width="6" height="1"/>
+        <rect class="block-full" x="14" y="1" width="3" height="1"/>
+        <rect class="block-full" x="14" y="2" width="3" height="1"/>
+        <rect class="block-full" x="9" y="3" width="5" height="1"/>
+        <rect class="block-full" x="6" y="4" width="3" height="1"/>
+        <rect class="block-full" x="6" y="5" width="3" height="1"/>
+
+        <rect class="block-full" x="22" y="0" width="6" height="1"/>
+        <rect class="block-full" x="20" y="1" width="3" height="1"/>
+        <rect class="block-full" x="28" y="1" width="3" height="1"/>
+        <rect class="block-full" x="23" y="2" width="2" height="1"/>
+        <rect class="block-full" x="28" y="2" width="2" height="1"/>
+        <rect class="block-full" x="23" y="3" width="5" height="1"/>
+        <rect class="block-full" x="28" y="4" width="3" height="1"/>
+        <rect class="block-full" x="22" y="5" width="6" height="1"/>
+
+        <rect class="block-full" x="36" y="0" width="8" height="1"/>
+        <rect class="block-full" x="34" y="1" width="3" height="1"/>
+        <rect class="block-full" x="34" y="2" width="3" height="1"/>
+        <rect class="block-full" x="34" y="3" width="5" height="1"/>
+        <rect class="block-full" x="34" y="4" width="3" height="1"/>
+        <rect class="block-full" x="34" y="5" width="3" height="1"/>
+
+        <rect class="block-full" x="50" y="5" width="8" height="1"/>
+      </svg>
+
+      <!-- Main logo -->
+      <svg class="logo-svg" width="620" height="100" viewBox="0 0 62 10">
+        <!-- Row 1 -->
+        <rect class="block-light" x="6" y="0" width="1" height="1"/>
+        <rect class="block-medium" x="7" y="0" width="1" height="1"/>
+        <rect class="block-dark" x="8" y="0" width="1" height="1"/>
+        <rect class="block-full" x="9" y="0" width="6" height="1"/>
+        <rect class="block-dark" x="15" y="0" width="1" height="1"/>
+        <rect class="block-medium" x="16" y="0" width="1" height="1"/>
+
+        <rect class="block-medium" x="20" y="0" width="1" height="1"/>
+        <rect class="block-dark" x="21" y="0" width="1" height="1"/>
+        <rect class="block-full" x="22" y="0" width="6" height="1"/>
+        <rect class="block-dark" x="28" y="0" width="1" height="1"/>
+        <rect class="block-medium" x="29" y="0" width="1" height="1"/>
+        <rect class="block-light" x="30" y="0" width="1" height="1"/>
+
+        <rect class="block-medium" x="34" y="0" width="1" height="1"/>
+        <rect class="block-dark" x="35" y="0" width="1" height="1"/>
+        <rect class="block-full" x="36" y="0" width="8" height="1"/>
+        <rect class="block-dark" x="44" y="0" width="1" height="1"/>
+        <rect class="block-medium" x="45" y="0" width="1" height="1"/>
+        <rect class="block-light" x="46" y="0" width="1" height="1"/>
+
+        <!-- Row 2 -->
+        <rect class="block-light" x="6" y="1" width="6" height="1"/>
+        <rect class="block-medium" x="12" y="1" width="1" height="1"/>
+        <rect class="block-dark" x="13" y="1" width="1" height="1"/>
+        <rect class="block-full" x="14" y="1" width="3" height="1"/>
+
+        <rect class="block-full" x="20" y="1" width="3" height="1"/>
+        <rect class="block-dark" x="23" y="1" width="1" height="1"/>
+        <rect class="block-medium" x="24" y="1" width="1" height="1"/>
+        <rect class="block-light" x="25" y="1" width="1" height="1"/>
+        <rect class="block-medium" x="26" y="1" width="1" height="1"/>
+        <rect class="block-dark" x="27" y="1" width="1" height="1"/>
+        <rect class="block-full" x="28" y="1" width="3" height="1"/>
+
+        <rect class="block-full" x="34" y="1" width="3" height="1"/>
+        <rect class="block-dark" x="37" y="1" width="1" height="1"/>
+        <rect class="block-medium" x="38" y="1" width="1" height="1"/>
+        <rect class="block-light" x="39" y="1" width="7" height="1"/>
+
+        <!-- Row 3 -->
+        <rect class="block-light" x="11" y="2" width="1" height="1"/>
+        <rect class="block-medium" x="12" y="2" width="1" height="1"/>
+        <rect class="block-dark" x="13" y="2" width="1" height="1"/>
+        <rect class="block-full" x="14" y="2" width="3" height="1"/>
+
+        <rect class="block-light" x="20" y="2" width="1" height="1"/>
+        <rect class="block-medium" x="21" y="2" width="1" height="1"/>
+        <rect class="block-dark" x="22" y="2" width="1" height="1"/>
+        <rect class="block-full" x="23" y="2" width="2" height="1"/>
+        <rect class="block-light" x="25" y="2" width="1" height="1"/>
+        <rect class="block-medium" x="26" y="2" width="1" height="1"/>
+        <rect class="block-dark" x="27" y="2" width="1" height="1"/>
+        <rect class="block-full" x="28" y="2" width="2" height="1"/>
+
+        <rect class="block-full" x="34" y="2" width="3" height="1"/>
+        <rect class="block-dark" x="37" y="2" width="1" height="1"/>
+
+        <!-- Row 4 -->
+        <rect class="block-light" x="6" y="3" width="1" height="1"/>
+        <rect class="block-medium" x="7" y="3" width="1" height="1"/>
+        <rect class="block-dark" x="8" y="3" width="1" height="1"/>
+        <rect class="block-full" x="9" y="3" width="5" height="1"/>
+        <rect class="block-dark" x="14" y="3" width="1" height="1"/>
+        <rect class="block-medium" x="15" y="3" width="1" height="1"/>
+        <rect class="block-light" x="16" y="3" width="1" height="1"/>
+
+        <rect class="block-medium" x="21" y="3" width="1" height="1"/>
+        <rect class="block-dark" x="22" y="3" width="1" height="1"/>
+        <rect class="block-full" x="23" y="3" width="5" height="1"/>
+        <rect class="block-dark" x="28" y="3" width="1" height="1"/>
+        <rect class="block-medium" x="29" y="3" width="1" height="1"/>
+
+        <rect class="block-full" x="34" y="3" width="5" height="1"/>
+        <rect class="block-dark" x="39" y="3" width="1" height="1"/>
+        <rect class="block-medium" x="40" y="3" width="1" height="1"/>
+        <rect class="block-light" x="41" y="3" width="1" height="1"/>
+
+        <!-- Row 5 -->
+        <rect class="block-full" x="6" y="4" width="3" height="1"/>
+        <rect class="block-dark" x="9" y="4" width="1" height="1"/>
+        <rect class="block-medium" x="10" y="4" width="1" height="1"/>
+        <rect class="block-light" x="11" y="4" width="5" height="1"/>
+
+        <rect class="block-light" x="23" y="4" width="3" height="1"/>
+        <rect class="block-medium" x="26" y="4" width="1" height="1"/>
+        <rect class="block-dark" x="27" y="4" width="1" height="1"/>
+        <rect class="block-full" x="28" y="4" width="3" height="1"/>
+
+        <rect class="block-full" x="34" y="4" width="3" height="1"/>
+        <rect class="block-dark" x="37" y="4" width="1" height="1"/>
+        <rect class="block-medium" x="38" y="4" width="1" height="1"/>
+        <rect class="block-light" x="39" y="4" width="4" height="1"/>
+
+        <!-- Row 6 -->
+        <rect class="block-full" x="6" y="5" width="3" height="1"/>
+        <rect class="block-dark" x="9" y="5" width="6" height="1"/>
+        <rect class="block-medium" x="15" y="5" width="1" height="1"/>
+        <rect class="block-light" x="16" y="5" width="1" height="1"/>
+
+        <rect class="block-medium" x="20" y="5" width="1" height="1"/>
+        <rect class="block-dark" x="21" y="5" width="1" height="1"/>
+        <rect class="block-full" x="22" y="5" width="6" height="1"/>
+        <rect class="block-dark" x="28" y="5" width="1" height="1"/>
+        <rect class="block-medium" x="29" y="5" width="1" height="1"/>
+        <rect class="block-light" x="30" y="5" width="1" height="1"/>
+
+        <rect class="block-full" x="34" y="5" width="3" height="1"/>
+
+        <!-- Underscore -->
+        <rect class="block-full underscore" x="50" y="5" width="8" height="1"/>
+        <rect class="block-dark underscore" x="58" y="5" width="2" height="1"/>
+
+        <!-- Row 7 -->
+        <rect class="block-light" x="6" y="6" width="1" height="1"/>
+        <rect class="block-medium" x="7" y="6" width="7" height="1"/>
+        <rect class="block-light" x="14" y="6" width="1" height="1"/>
+
+        <rect class="block-light" x="21" y="6" width="1" height="1"/>
+        <rect class="block-medium" x="22" y="6" width="6" height="1"/>
+        <rect class="block-light" x="28" y="6" width="1" height="1"/>
+
+        <rect class="block-light" x="34" y="6" width="1" height="1"/>
+        <rect class="block-medium" x="35" y="6" width="2" height="1"/>
+
+        <rect class="block-medium underscore" x="50" y="6" width="10" height="1"/>
+      </svg>
+    </div>
+  </div>
+
+  <!-- Demo 4: Scanlines overlay -->
+  <div class="demo-section">
+    <h2>4. With scanlines</h2>
+    <div class="scanlines">
+      <svg class="logo-svg" width="620" height="100" viewBox="0 0 62 10">
+        <!-- Row 1 -->
+        <rect class="block-light" x="6" y="0" width="1" height="1"/>
+        <rect class="block-medium" x="7" y="0" width="1" height="1"/>
+        <rect class="block-dark" x="8" y="0" width="1" height="1"/>
+        <rect class="block-full" x="9" y="0" width="6" height="1"/>
+        <rect class="block-dark" x="15" y="0" width="1" height="1"/>
+        <rect class="block-medium" x="16" y="0" width="1" height="1"/>
+
+        <rect class="block-medium" x="20" y="0" width="1" height="1"/>
+        <rect class="block-dark" x="21" y="0" width="1" height="1"/>
+        <rect class="block-full" x="22" y="0" width="6" height="1"/>
+        <rect class="block-dark" x="28" y="0" width="1" height="1"/>
+        <rect class="block-medium" x="29" y="0" width="1" height="1"/>
+        <rect class="block-light" x="30" y="0" width="1" height="1"/>
+
+        <rect class="block-medium" x="34" y="0" width="1" height="1"/>
+        <rect class="block-dark" x="35" y="0" width="1" height="1"/>
+        <rect class="block-full" x="36" y="0" width="8" height="1"/>
+        <rect class="block-dark" x="44" y="0" width="1" height="1"/>
+        <rect class="block-medium" x="45" y="0" width="1" height="1"/>
+        <rect class="block-light" x="46" y="0" width="1" height="1"/>
+
+        <!-- Row 2 -->
+        <rect class="block-light" x="6" y="1" width="6" height="1"/>
+        <rect class="block-medium" x="12" y="1" width="1" height="1"/>
+        <rect class="block-dark" x="13" y="1" width="1" height="1"/>
+        <rect class="block-full" x="14" y="1" width="3" height="1"/>
+
+        <rect class="block-full" x="20" y="1" width="3" height="1"/>
+        <rect class="block-dark" x="23" y="1" width="1" height="1"/>
+        <rect class="block-medium" x="24" y="1" width="1" height="1"/>
+        <rect class="block-light" x="25" y="1" width="1" height="1"/>
+        <rect class="block-medium" x="26" y="1" width="1" height="1"/>
+        <rect class="block-dark" x="27" y="1" width="1" height="1"/>
+        <rect class="block-full" x="28" y="1" width="3" height="1"/>
+
+        <rect class="block-full" x="34" y="1" width="3" height="1"/>
+        <rect class="block-dark" x="37" y="1" width="1" height="1"/>
+        <rect class="block-medium" x="38" y="1" width="1" height="1"/>
+        <rect class="block-light" x="39" y="1" width="7" height="1"/>
+
+        <!-- Row 3 -->
+        <rect class="block-light" x="11" y="2" width="1" height="1"/>
+        <rect class="block-medium" x="12" y="2" width="1" height="1"/>
+        <rect class="block-dark" x="13" y="2" width="1" height="1"/>
+        <rect class="block-full" x="14" y="2" width="3" height="1"/>
+
+        <rect class="block-light" x="20" y="2" width="1" height="1"/>
+        <rect class="block-medium" x="21" y="2" width="1" height="1"/>
+        <rect class="block-dark" x="22" y="2" width="1" height="1"/>
+        <rect class="block-full" x="23" y="2" width="2" height="1"/>
+        <rect class="block-light" x="25" y="2" width="1" height="1"/>
+        <rect class="block-medium" x="26" y="2" width="1" height="1"/>
+        <rect class="block-dark" x="27" y="2" width="1" height="1"/>
+        <rect class="block-full" x="28" y="2" width="2" height="1"/>
+
+        <rect class="block-full" x="34" y="2" width="3" height="1"/>
+        <rect class="block-dark" x="37" y="2" width="1" height="1"/>
+
+        <!-- Row 4 -->
+        <rect class="block-light" x="6" y="3" width="1" height="1"/>
+        <rect class="block-medium" x="7" y="3" width="1" height="1"/>
+        <rect class="block-dark" x="8" y="3" width="1" height="1"/>
+        <rect class="block-full" x="9" y="3" width="5" height="1"/>
+        <rect class="block-dark" x="14" y="3" width="1" height="1"/>
+        <rect class="block-medium" x="15" y="3" width="1" height="1"/>
+        <rect class="block-light" x="16" y="3" width="1" height="1"/>
+
+        <rect class="block-medium" x="21" y="3" width="1" height="1"/>
+        <rect class="block-dark" x="22" y="3" width="1" height="1"/>
+        <rect class="block-full" x="23" y="3" width="5" height="1"/>
+        <rect class="block-dark" x="28" y="3" width="1" height="1"/>
+        <rect class="block-medium" x="29" y="3" width="1" height="1"/>
+
+        <rect class="block-full" x="34" y="3" width="5" height="1"/>
+        <rect class="block-dark" x="39" y="3" width="1" height="1"/>
+        <rect class="block-medium" x="40" y="3" width="1" height="1"/>
+        <rect class="block-light" x="41" y="3" width="1" height="1"/>
+
+        <!-- Row 5 -->
+        <rect class="block-full" x="6" y="4" width="3" height="1"/>
+        <rect class="block-dark" x="9" y="4" width="1" height="1"/>
+        <rect class="block-medium" x="10" y="4" width="1" height="1"/>
+        <rect class="block-light" x="11" y="4" width="5" height="1"/>
+
+        <rect class="block-light" x="23" y="4" width="3" height="1"/>
+        <rect class="block-medium" x="26" y="4" width="1" height="1"/>
+        <rect class="block-dark" x="27" y="4" width="1" height="1"/>
+        <rect class="block-full" x="28" y="4" width="3" height="1"/>
+
+        <rect class="block-full" x="34" y="4" width="3" height="1"/>
+        <rect class="block-dark" x="37" y="4" width="1" height="1"/>
+        <rect class="block-medium" x="38" y="4" width="1" height="1"/>
+        <rect class="block-light" x="39" y="4" width="4" height="1"/>
+
+        <!-- Row 6 -->
+        <rect class="block-full" x="6" y="5" width="3" height="1"/>
+        <rect class="block-dark" x="9" y="5" width="6" height="1"/>
+        <rect class="block-medium" x="15" y="5" width="1" height="1"/>
+        <rect class="block-light" x="16" y="5" width="1" height="1"/>
+
+        <rect class="block-medium" x="20" y="5" width="1" height="1"/>
+        <rect class="block-dark" x="21" y="5" width="1" height="1"/>
+        <rect class="block-full" x="22" y="5" width="6" height="1"/>
+        <rect class="block-dark" x="28" y="5" width="1" height="1"/>
+        <rect class="block-medium" x="29" y="5" width="1" height="1"/>
+        <rect class="block-light" x="30" y="5" width="1" height="1"/>
+
+        <rect class="block-full" x="34" y="5" width="3" height="1"/>
+
+        <!-- Underscore -->
+        <rect class="block-full underscore" x="50" y="5" width="8" height="1"/>
+        <rect class="block-dark underscore" x="58" y="5" width="2" height="1"/>
+
+        <!-- Row 7 -->
+        <rect class="block-light" x="6" y="6" width="1" height="1"/>
+        <rect class="block-medium" x="7" y="6" width="7" height="1"/>
+        <rect class="block-light" x="14" y="6" width="1" height="1"/>
+
+        <rect class="block-light" x="21" y="6" width="1" height="1"/>
+        <rect class="block-medium" x="22" y="6" width="6" height="1"/>
+        <rect class="block-light" x="28" y="6" width="1" height="1"/>
+
+        <rect class="block-light" x="34" y="6" width="1" height="1"/>
+        <rect class="block-medium" x="35" y="6" width="2" height="1"/>
+
+        <rect class="block-medium underscore" x="50" y="6" width="10" height="1"/>
+      </svg>
+    </div>
+  </div>
+
+  <!-- Demo 5: Interactive -->
+  <div class="demo-section">
+    <h2>5. Interactive</h2>
+    <svg id="interactive-logo" class="logo-svg" width="620" height="100" viewBox="0 0 62 10">
+      <!-- Row 1 -->
+      <rect class="block-light" x="6" y="0" width="1" height="1"/>
+      <rect class="block-medium" x="7" y="0" width="1" height="1"/>
+      <rect class="block-dark" x="8" y="0" width="1" height="1"/>
+      <rect class="block-full" x="9" y="0" width="6" height="1"/>
+      <rect class="block-dark" x="15" y="0" width="1" height="1"/>
+      <rect class="block-medium" x="16" y="0" width="1" height="1"/>
+
+      <rect class="block-medium" x="20" y="0" width="1" height="1"/>
+      <rect class="block-dark" x="21" y="0" width="1" height="1"/>
+      <rect class="block-full" x="22" y="0" width="6" height="1"/>
+      <rect class="block-dark" x="28" y="0" width="1" height="1"/>
+      <rect class="block-medium" x="29" y="0" width="1" height="1"/>
+      <rect class="block-light" x="30" y="0" width="1" height="1"/>
+
+      <rect class="block-medium" x="34" y="0" width="1" height="1"/>
+      <rect class="block-dark" x="35" y="0" width="1" height="1"/>
+      <rect class="block-full" x="36" y="0" width="8" height="1"/>
+      <rect class="block-dark" x="44" y="0" width="1" height="1"/>
+      <rect class="block-medium" x="45" y="0" width="1" height="1"/>
+      <rect class="block-light" x="46" y="0" width="1" height="1"/>
+
+      <!-- Row 2 -->
+      <rect class="block-light" x="6" y="1" width="6" height="1"/>
+      <rect class="block-medium" x="12" y="1" width="1" height="1"/>
+      <rect class="block-dark" x="13" y="1" width="1" height="1"/>
+      <rect class="block-full" x="14" y="1" width="3" height="1"/>
+
+      <rect class="block-full" x="20" y="1" width="3" height="1"/>
+      <rect class="block-dark" x="23" y="1" width="1" height="1"/>
+      <rect class="block-medium" x="24" y="1" width="1" height="1"/>
+      <rect class="block-light" x="25" y="1" width="1" height="1"/>
+      <rect class="block-medium" x="26" y="1" width="1" height="1"/>
+      <rect class="block-dark" x="27" y="1" width="1" height="1"/>
+      <rect class="block-full" x="28" y="1" width="3" height="1"/>
+
+      <rect class="block-full" x="34" y="1" width="3" height="1"/>
+      <rect class="block-dark" x="37" y="1" width="1" height="1"/>
+      <rect class="block-medium" x="38" y="1" width="1" height="1"/>
+      <rect class="block-light" x="39" y="1" width="7" height="1"/>
+
+      <!-- Row 3 -->
+      <rect class="block-light" x="11" y="2" width="1" height="1"/>
+      <rect class="block-medium" x="12" y="2" width="1" height="1"/>
+      <rect class="block-dark" x="13" y="2" width="1" height="1"/>
+      <rect class="block-full" x="14" y="2" width="3" height="1"/>
+
+      <rect class="block-light" x="20" y="2" width="1" height="1"/>
+      <rect class="block-medium" x="21" y="2" width="1" height="1"/>
+      <rect class="block-dark" x="22" y="2" width="1" height="1"/>
+      <rect class="block-full" x="23" y="2" width="2" height="1"/>
+      <rect class="block-light" x="25" y="2" width="1" height="1"/>
+      <rect class="block-medium" x="26" y="2" width="1" height="1"/>
+      <rect class="block-dark" x="27" y="2" width="1" height="1"/>
+      <rect class="block-full" x="28" y="2" width="2" height="1"/>
+
+      <rect class="block-full" x="34" y="2" width="3" height="1"/>
+      <rect class="block-dark" x="37" y="2" width="1" height="1"/>
+
+      <!-- Row 4 -->
+      <rect class="block-light" x="6" y="3" width="1" height="1"/>
+      <rect class="block-medium" x="7" y="3" width="1" height="1"/>
+      <rect class="block-dark" x="8" y="3" width="1" height="1"/>
+      <rect class="block-full" x="9" y="3" width="5" height="1"/>
+      <rect class="block-dark" x="14" y="3" width="1" height="1"/>
+      <rect class="block-medium" x="15" y="3" width="1" height="1"/>
+      <rect class="block-light" x="16" y="3" width="1" height="1"/>
+
+      <rect class="block-medium" x="21" y="3" width="1" height="1"/>
+      <rect class="block-dark" x="22" y="3" width="1" height="1"/>
+      <rect class="block-full" x="23" y="3" width="5" height="1"/>
+      <rect class="block-dark" x="28" y="3" width="1" height="1"/>
+      <rect class="block-medium" x="29" y="3" width="1" height="1"/>
+
+      <rect class="block-full" x="34" y="3" width="5" height="1"/>
+      <rect class="block-dark" x="39" y="3" width="1" height="1"/>
+      <rect class="block-medium" x="40" y="3" width="1" height="1"/>
+      <rect class="block-light" x="41" y="3" width="1" height="1"/>
+
+      <!-- Row 5 -->
+      <rect class="block-full" x="6" y="4" width="3" height="1"/>
+      <rect class="block-dark" x="9" y="4" width="1" height="1"/>
+      <rect class="block-medium" x="10" y="4" width="1" height="1"/>
+      <rect class="block-light" x="11" y="4" width="5" height="1"/>
+
+      <rect class="block-light" x="23" y="4" width="3" height="1"/>
+      <rect class="block-medium" x="26" y="4" width="1" height="1"/>
+      <rect class="block-dark" x="27" y="4" width="1" height="1"/>
+      <rect class="block-full" x="28" y="4" width="3" height="1"/>
+
+      <rect class="block-full" x="34" y="4" width="3" height="1"/>
+      <rect class="block-dark" x="37" y="4" width="1" height="1"/>
+      <rect class="block-medium" x="38" y="4" width="1" height="1"/>
+      <rect class="block-light" x="39" y="4" width="4" height="1"/>
+
+      <!-- Row 6 -->
+      <rect class="block-full" x="6" y="5" width="3" height="1"/>
+      <rect class="block-dark" x="9" y="5" width="6" height="1"/>
+      <rect class="block-medium" x="15" y="5" width="1" height="1"/>
+      <rect class="block-light" x="16" y="5" width="1" height="1"/>
+
+      <rect class="block-medium" x="20" y="5" width="1" height="1"/>
+      <rect class="block-dark" x="21" y="5" width="1" height="1"/>
+      <rect class="block-full" x="22" y="5" width="6" height="1"/>
+      <rect class="block-dark" x="28" y="5" width="1" height="1"/>
+      <rect class="block-medium" x="29" y="5" width="1" height="1"/>
+      <rect class="block-light" x="30" y="5" width="1" height="1"/>
+
+      <rect class="block-full" x="34" y="5" width="3" height="1"/>
+
+      <!-- Underscore -->
+      <rect class="block-full underscore" x="50" y="5" width="8" height="1"/>
+      <rect class="block-dark underscore" x="58" y="5" width="2" height="1"/>
+
+      <!-- Row 7 -->
+      <rect class="block-light" x="6" y="6" width="1" height="1"/>
+      <rect class="block-medium" x="7" y="6" width="7" height="1"/>
+      <rect class="block-light" x="14" y="6" width="1" height="1"/>
+
+      <rect class="block-light" x="21" y="6" width="1" height="1"/>
+      <rect class="block-medium" x="22" y="6" width="6" height="1"/>
+      <rect class="block-light" x="28" y="6" width="1" height="1"/>
+
+      <rect class="block-light" x="34" y="6" width="1" height="1"/>
+      <rect class="block-medium" x="35" y="6" width="2" height="1"/>
+
+      <rect class="block-medium underscore" x="50" y="6" width="10" height="1"/>
+    </svg>
+
+    <div class="controls">
+      <button onclick="setColor('teal')" class="active">Teal</button>
+      <button onclick="setColor('yellow')">Yellow</button>
+      <button onclick="setColor('magenta')">Magenta</button>
+      <button onclick="setColor('terminal')">Terminal</button>
+      <button onclick="togglePulse()">Toggle Pulse</button>
+    </div>
+  </div>
+
+  <script>
+    const colorSchemes = {
+      teal: {
+        full: '#26A69A',
+        dark: '#1D7A74',
+        medium: '#155A56',
+        light: '#0C3A38'
+      },
+      yellow: {
+        full: '#FFD600',
+        dark: '#CCA800',
+        medium: '#997D00',
+        light: '#665300'
+      },
+      magenta: {
+        full: '#FF0080',
+        dark: '#CC0066',
+        medium: '#99004D',
+        light: '#660033'
+      },
+      terminal: {
+        full: '#00FF00',
+        dark: '#00CC00',
+        medium: '#009900',
+        light: '#006600'
+      }
+    };
+
+    function setColor(scheme) {
+      const colors = colorSchemes[scheme];
+      const logo = document.getElementById('interactive-logo');
+
+      logo.querySelectorAll('.block-full').forEach(el => el.style.fill = colors.full);
+      logo.querySelectorAll('.block-dark').forEach(el => el.style.fill = colors.dark);
+      logo.querySelectorAll('.block-medium').forEach(el => el.style.fill = colors.medium);
+      logo.querySelectorAll('.block-light').forEach(el => el.style.fill = colors.light);
+
+      document.querySelectorAll('.controls button').forEach(btn => btn.classList.remove('active'));
+      event.target.classList.add('active');
+    }
+
+    let isPulsing = false;
+    function togglePulse() {
+      isPulsing = !isPulsing;
+      const logo = document.getElementById('interactive-logo');
+      if (isPulsing) {
+        logo.classList.add('logo-pulse');
+      } else {
+        logo.classList.remove('logo-pulse');
+      }
+    }
+  </script>
+
+</body>
+</html>
