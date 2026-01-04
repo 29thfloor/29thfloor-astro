@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Terminal Output - Test</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Fira Code', monospace;
+      background: #011518;
+      color: #26A69A;
+      min-height: 100vh;
+      padding: 2rem;
+    }
+
+    h1 {
+      margin-bottom: 2rem;
+      text-shadow: 0 0 10px #26A69A;
+    }
+
+    .demo-section {
+      margin-bottom: 3rem;
+    }
+
+    .demo-section h2 {
+      font-size: 0.875rem;
+      color: #0C3A38;
+      margin-bottom: 1rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    .output-frame {
+      border: 1px solid #0C3A38;
+      height: 300px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .controls {
+      margin-top: 1rem;
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    button {
+      font-family: inherit;
+      font-size: 0.875rem;
+      padding: 0.5rem 1rem;
+      background: transparent;
+      border: 1px solid #26A69A;
+      color: #26A69A;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    button:hover {
+      background: rgba(38, 166, 154, 0.2);
+      text-shadow: 0 0 5px #26A69A;
+    }
+
+    button:active {
+      transform: scale(0.98);
+    }
+
+    .instructions {
+      margin-bottom: 2rem;
+      padding: 1rem;
+      background: rgba(0, 0, 0, 0.2);
+      border-left: 2px solid #26A69A;
+    }
+
+    .instructions p {
+      margin-bottom: 0.5rem;
+    }
+
+    /* Slotted content styles */
+    .page-content {
+      padding: 1rem;
+      border-bottom: 1px dashed #0C3A38;
+      margin-bottom: 1rem;
+    }
+
+    .page-content h3 {
+      color: #FFD600;
+      margin-bottom: 0.5rem;
+    }
+  </style>
+</head>
+<body>
+  <h1>Terminal Output Component</h1>
+
+  <div class="instructions">
+    <p><strong>Test features:</strong></p>
+    <p>- Click buttons to append different content types</p>
+    <p>- Output auto-scrolls to bottom on new content</p>
+    <p>- Scroll up manually to see history</p>
+    <p>- Clear button removes all content</p>
+  </div>
+
+  <!-- Demo 1: Basic Output -->
+  <section class="demo-section">
+    <h2>Demo 1: Dynamic Output</h2>
+    <div class="output-frame">
+      <terminal-output id="demo1"></terminal-output>
+    </div>
+    <div class="controls">
+      <button onclick="addText()">Add Text</button>
+      <button onclick="addCommand()">Add Command</button>
+      <button onclick="addSystem()">Add System</button>
+      <button onclick="addError()">Add Error</button>
+      <button onclick="addSuccess()">Add Success</button>
+      <button onclick="addHTML()">Add HTML</button>
+      <button onclick="clearOutput()">Clear</button>
+    </div>
+  </section>
+
+  <!-- Demo 2: With Slotted Content -->
+  <section class="demo-section">
+    <h2>Demo 2: With Initial Page Content (Slotted)</h2>
+    <div class="output-frame">
+      <terminal-output id="demo2">
+        <div class="page-content">
+          <h3>Welcome to 29thfloor</h3>
+          <p>This is slotted content that represents the initial page content.</p>
+          <p>New output will appear below this section.</p>
+        </div>
+      </terminal-output>
+    </div>
+    <div class="controls">
+      <button onclick="addToDemo2()">Add Output</button>
+      <button onclick="clearDemo2()">Clear</button>
+    </div>
+  </section>
+
+  <!-- Demo 3: Stress Test -->
+  <section class="demo-section">
+    <h2>Demo 3: Stress Test (Auto-scroll)</h2>
+    <div class="output-frame">
+      <terminal-output id="demo3"></terminal-output>
+    </div>
+    <div class="controls">
+      <button onclick="startStressTest()">Start Rapid Add</button>
+      <button onclick="stopStressTest()">Stop</button>
+      <button onclick="clearDemo3()">Clear</button>
+    </div>
+  </section>
+
+  <script type="module" src="../src/components/terminal-output.js"></script>
+  <script type="module">
+    // Wait for custom element to be defined
+    await customElements.whenDefined('terminal-output');
+
+    // Demo 1 controls
+    const demo1 = document.getElementById('demo1');
+    let textCounter = 0;
+
+    function addText() {
+      demo1.appendLine(`This is line ${++textCounter} of output text.`);
+    }
+
+    function addCommand() {
+      demo1.appendLine(`ls -la /home/user`, 'command');
+    }
+
+    function addSystem() {
+      demo1.appendLine('System initialized successfully.', 'system');
+    }
+
+    function addError() {
+      demo1.appendLine('Error: Connection refused.', 'error');
+    }
+
+    function addSuccess() {
+      demo1.appendLine('Operation completed successfully.', 'success');
+    }
+
+    function addHTML() {
+      demo1.append('<strong>Bold text</strong> and <em>italic text</em> with <span style="color: #FFD600;">custom colors</span>.');
+    }
+
+    function clearOutput() {
+      demo1.clear();
+      textCounter = 0;
+    }
+
+    // Demo 2 controls
+    const demo2 = document.getElementById('demo2');
+    let demo2Counter = 0;
+
+    function addToDemo2() {
+      demo2.appendLine(`New output entry ${++demo2Counter}`);
+    }
+
+    function clearDemo2() {
+      demo2.clear();
+      demo2Counter = 0;
+    }
+
+    // Demo 3 controls
+    const demo3 = document.getElementById('demo3');
+    let stressInterval = null;
+    let stressCounter = 0;
+
+    function startStressTest() {
+      if (stressInterval) return;
+
+      stressInterval = setInterval(() => {
+        demo3.appendLine(`Rapid entry ${++stressCounter}`);
+      }, 100);
+    }
+
+    function stopStressTest() {
+      if (stressInterval) {
+        clearInterval(stressInterval);
+        stressInterval = null;
+      }
+    }
+
+    function clearDemo3() {
+      stopStressTest();
+      demo3.clear();
+      stressCounter = 0;
+    }
+
+    // Initial demo content
+    demo1.appendLine('Terminal output initialized.', 'system');
+    demo1.appendLine('Ready for input.', 'system');
+
+    // Expose functions to window for onclick handlers
+    window.addText = addText;
+    window.addCommand = addCommand;
+    window.addSystem = addSystem;
+    window.addError = addError;
+    window.addSuccess = addSuccess;
+    window.addHTML = addHTML;
+    window.clearOutput = clearOutput;
+    window.addToDemo2 = addToDemo2;
+    window.clearDemo2 = clearDemo2;
+    window.startStressTest = startStressTest;
+    window.stopStressTest = stopStressTest;
+    window.clearDemo3 = clearDemo3;
+  </script>
+</body>
+</html>

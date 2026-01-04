@@ -104,7 +104,13 @@ The logo is built with SVG using a block-based approach inspired by ASCII art:
 
 ### Section Headers
 
-_TODO: Add ASCII headers for each section_
+Working prototypes: [`prototypes/svg-section-headers.html`](../prototypes/svg-section-headers.html)
+
+**Styles explored:**
+1. **Underline with gradient fade** — Clean text with fading accent line
+2. **Left accent bar** — Vertical bar beside text
+3. **Full block letters** — Same as logo with animated gradient
+4. **Compact with arrow** — Menu-style with active/inactive states
 
 ### Decorative Elements
 
@@ -268,23 +274,23 @@ Optional text reveal animation:
 
 ---
 
-## Open Questions
+## Design Decisions
 
-1. **Home/landing page**: Literal "PRESS START" or straight into menu? Maybe more like a BBS menu
+1. **Home/landing page**: BBS-style menu (not literal "PRESS START")
 
-2. **Loading states**: Fake "connecting" sequences? How much is too much? Nothing that slows down the user flow, but definitely include lots of loading states and subtle animations
+2. **Loading states**: Yes, include loading states and subtle animations — but nothing that slows user flow
 
-3. **Mobile**: How does terminal UI adapt? Simplified? Same but touch? Open to suggestions
+3. **Mobile**: Open to suggestions — same UI but touch-friendly
 
-4. **ASCII art**: Hand-craft each piece or generate? Mix? Probably generate based on photo/illustration
+4. **ASCII art**: Mix of hand-crafted and generated from photo/illustration
 
-5. **Profile section**: What stats/skills to show? Literal game stats? Things that sound like game stats but include life experience and human traits
+5. **Profile section**: Game-style stats that include life experience and human traits (not literal game stats)
 
-6. **Codex content**: What topics? Tech history? Cultural observations? Anything I'm interested in.
+6. **Codex content**: Anything I'm interested in — tech history, cultural observations, etc.
 
-7. **Sound**: Worth the effort? Adds atmosphere but also complexity. Some subtle sounds would be nice.
+7. **Sound**: Yes, subtle sounds — worth the effort for atmosphere
 
-8. **Transitions**: Page transitions or SPA-style content swapping? Let's consider both
+8. **Transitions**: Consider both page transitions and SPA-style content swapping
 
 ---
 
@@ -303,9 +309,9 @@ Optional text reveal animation:
 
 ## Next Steps
 
-1. [ ] Answer open questions above
+1. [x] Answer open questions — see Design Decisions above
 2. [x] Sketch ASCII art for key elements (logo) — see [SVG prototypes](../prototypes/svg-ascii-logo-v2.html)
-3. [ ] Create ASCII section headers
+3. [x] Create ASCII section headers — see [section header prototypes](../prototypes/svg-section-headers.html)
 4. [ ] Prototype terminal-frame Web Component
 5. [ ] Define content for PROFILE section (what stats/skills?)
 6. [ ] Plan CODEX topics

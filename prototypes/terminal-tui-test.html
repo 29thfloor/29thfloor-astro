@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Terminal TUI - Test</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Fira Code', monospace;
+      background: #011518;
+      color: #26A69A;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      padding: 1rem 2rem;
+      border-bottom: 1px solid #0C3A38;
+      flex-shrink: 0;
+    }
+
+    header h1 {
+      font-size: 1rem;
+      text-shadow: 0 0 10px #26A69A;
+    }
+
+    .instructions {
+      padding: 1rem 2rem;
+      background: rgba(0, 0, 0, 0.2);
+      border-bottom: 1px solid #0C3A38;
+      flex-shrink: 0;
+    }
+
+    .instructions p {
+      margin-bottom: 0.25rem;
+      font-size: 0.875rem;
+      color: #0C3A38;
+    }
+
+    .instructions code {
+      background: rgba(0, 0, 0, 0.3);
+      padding: 0.1rem 0.3rem;
+      color: #26A69A;
+    }
+
+    main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+    }
+
+    /* Simulated page content */
+    .page-content {
+      padding: 1rem;
+      border-bottom: 1px dashed #0C3A38;
+    }
+
+    .page-content h2 {
+      color: #FFD600;
+      margin-bottom: 0.5rem;
+      text-shadow: 0 0 10px #FFD600;
+    }
+
+    .page-content p {
+      margin-bottom: 0.5rem;
+      line-height: 1.6;
+    }
+
+    .page-content ul {
+      margin-left: 2rem;
+      margin-bottom: 0.5rem;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Terminal TUI - Integration Test</h1>
+  </header>
+
+  <div class="instructions">
+    <p><strong>Test the full TUI:</strong></p>
+    <p>- Type <code>help</code> to see available commands</p>
+    <p>- Type <code>menu</code> to show navigation (Escape to cancel)</p>
+    <p>- Type <code>clear</code> to clear the screen</p>
+    <p>- Try direct navigation: <code>blog</code>, <code>work</code>, etc.</p>
+    <p>- Use arrow keys or j/k in menu, Enter to confirm</p>
+  </div>
+
+  <main>
+    <terminal-tui page-title="HOME">
+      <!-- This slot content simulates actual page content -->
+      <div class="page-content">
+        <h2>Welcome to 29thfloor</h2>
+        <p>This is the home page content that would normally come from Astro.</p>
+        <p>The terminal TUI wraps this content and adds:</p>
+        <ul>
+          <li>Command prompt for navigation</li>
+          <li>Scrollback history</li>
+          <li>Keyboard + mouse navigation</li>
+        </ul>
+        <p>Try scrolling up after adding some commands to see history.</p>
+      </div>
+    </terminal-tui>
+  </main>
+
+  <!-- Load all component dependencies -->
+  <script type="module" src="../src/components/terminal-output.js"></script>
+  <script type="module" src="../src/components/terminal-menu.js"></script>
+  <script type="module" src="../src/components/terminal-prompt.js"></script>
+  <script type="module" src="../src/components/terminal-tui.js"></script>
+</body>
+</html>

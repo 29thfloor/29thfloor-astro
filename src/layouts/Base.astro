@@ -2,8 +2,8 @@
 /**
  * Base Layout
  *
- * This is the main layout wrapper for all pages.
- * It includes the HTML boilerplate, global styles, header, and footer.
+ * Terminal TUI layout wrapper for all pages.
+ * Wraps content in terminal-frame (visual) + terminal-tui (functional).
  */
 
 // Import global styles (includes Tailwind)
@@ -30,43 +30,56 @@ const { title, description = '29th Floor - Creative work by Daniel McFarland' } 
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;700&display=swap" rel="stylesheet" />
 
+  <style>
+    /* Full viewport terminal */
+    html, body {
+      height: 100%;
+      margin: 0;
+      overflow: hidden;
+      background: #011518;
+    }
+
+    terminal-frame {
+      height: 100%;
+    }
+
+    /* Page content styling */
+    .page-content {
+      color: #26A69A;
+      background: transparent;
+    }
+
+    .page-content h1,
+    .page-content h2,
+    .page-content h3 {
+      color: #FFD600;
+    }
+
+    .page-content a {
+      color: #26A69A;
+    }
+
+    .page-content a:hover {
+      color: #FFD600;
+    }
+  </style>
 </head>
-<body class="bg-teal-950 text-teal-500 font-mono min-h-screen">
+<body>
 
-  <header class="flex items-center justify-between p-4">
-    <a href="/" class="text-white text-2xl font-bold hover:text-yellow-500 transition-colors">
-      29F_
-    </a>
+  <terminal-frame title="29F_ TERMINAL v2.0">
+    <terminal-tui page-title={title.toUpperCase()}>
+      <div class="page-content">
+        <slot />
+      </div>
+    </terminal-tui>
+  </terminal-frame>
 
-    <nav>
-      <ul class="flex gap-6">
-        <li>
-          <a href="/everyday" class="text-teal-500 hover:text-yellow-500 transition-colors">
-            Everyday
-          </a>
-        </li>
-        <li>
-          <a href="/work" class="text-teal-500 hover:text-yellow-500 transition-colors">
-            Work
-          </a>
-        </li>
-        <li>
-          <a href="/blog" class="text-teal-500 hover:text-yellow-500 transition-colors">
-            Blog
-          </a>
-        </li>
-      </ul>
-    </nav>
-  </header>
-
-  <main>
-    <!-- Page content goes here via the slot -->
-    <slot />
-  </main>
-
-  <footer class="p-4 text-center text-teal-700 mt-8">
-    <p>&copy; {new Date().getFullYear()} 29th Floor</p>
-  </footer>
+  <!-- Terminal components -->
+  <script src="/src/components/terminal-frame.js"></script>
+  <script src="/src/components/terminal-output.js"></script>
+  <script src="/src/components/terminal-menu.js"></script>
+  <script src="/src/components/terminal-prompt.js"></script>
+  <script src="/src/components/terminal-tui.js"></script>
 
 </body>
 </html>

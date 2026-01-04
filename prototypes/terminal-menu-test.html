@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Terminal Menu - Test</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Fira Code', monospace;
+      background: #011518;
+      color: #26A69A;
+      min-height: 100vh;
+      padding: 2rem;
+    }
+
+    h1 {
+      margin-bottom: 2rem;
+      text-shadow: 0 0 10px #26A69A;
+    }
+
+    .demo-section {
+      margin-bottom: 3rem;
+      max-width: 400px;
+    }
+
+    .demo-section h2 {
+      font-size: 0.875rem;
+      color: #0C3A38;
+      margin-bottom: 1rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    .output-log {
+      margin-top: 1rem;
+      padding: 1rem;
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid #0C3A38;
+      min-height: 60px;
+      font-size: 0.875rem;
+    }
+
+    .output-log .entry {
+      margin-bottom: 0.25rem;
+      color: #0C3A38;
+    }
+
+    .output-log .entry.confirm {
+      color: #FFD600;
+    }
+
+    .instructions {
+      margin-bottom: 2rem;
+      padding: 1rem;
+      background: rgba(0, 0, 0, 0.2);
+      border-left: 2px solid #26A69A;
+    }
+
+    .instructions p {
+      margin-bottom: 0.5rem;
+    }
+
+    .instructions code {
+      background: rgba(0, 0, 0, 0.3);
+      padding: 0.1rem 0.3rem;
+    }
+  </style>
+</head>
+<body>
+  <h1>Terminal Menu Component</h1>
+
+  <div class="instructions">
+    <p><strong>Test interactions:</strong></p>
+    <p>- Press <code>Tab</code> to focus a menu (or click on it)</p>
+    <p>- Press <code>↑</code> / <code>↓</code> to navigate (or <code>j</code> / <code>k</code>)</p>
+    <p>- Press <code>Enter</code> or <code>Space</code> to confirm</p>
+    <p>- Hover over items with mouse</p>
+    <p>- Click directly on items to select and confirm</p>
+  </div>
+
+  <!-- Demo 1: Navigation Menu -->
+  <section class="demo-section">
+    <h2>Demo 1: Site Navigation</h2>
+    <terminal-menu
+      id="demo1"
+      prompt="Where to next?"
+      items='[
+        {"label": "Home", "path": "/"},
+        {"label": "Blog", "path": "/blog"},
+        {"label": "Projects", "path": "/projects"},
+        {"label": "Work", "path": "/work"},
+        {"label": "About", "path": "/about"},
+        {"label": "Contact", "path": "/contact"},
+        {"label": "Archive", "path": "/archive"}
+      ]'
+    ></terminal-menu>
+    <div class="output-log" id="log1"></div>
+  </section>
+
+  <!-- Demo 2: Pre-selected item -->
+  <section class="demo-section">
+    <h2>Demo 2: Pre-selected (index 2)</h2>
+    <terminal-menu
+      id="demo2"
+      selected="2"
+      items='[
+        {"label": "Option A", "value": "a"},
+        {"label": "Option B", "value": "b"},
+        {"label": "Option C", "value": "c"},
+        {"label": "Option D", "value": "d"}
+      ]'
+    ></terminal-menu>
+    <div class="output-log" id="log2"></div>
+  </section>
+
+  <!-- Demo 3: Simple string items -->
+  <section class="demo-section">
+    <h2>Demo 3: Simple String Items</h2>
+    <terminal-menu
+      id="demo3"
+      prompt="Select a color:"
+      items='["Red", "Green", "Blue", "Yellow"]'
+    ></terminal-menu>
+    <div class="output-log" id="log3"></div>
+  </section>
+
+  <script type="module" src="../src/components/terminal-menu.js"></script>
+  <script>
+    function setupDemo(menuId, logId) {
+      const menu = document.getElementById(menuId);
+      const log = document.getElementById(logId);
+
+      menu.addEventListener('menu:select', (e) => {
+        const entry = document.createElement('div');
+        entry.className = 'entry';
+        entry.textContent = `Selected: ${e.detail.item.label || e.detail.item} (index ${e.detail.index})`;
+        log.appendChild(entry);
+
+        // Keep log short
+        while (log.children.length > 5) {
+          log.removeChild(log.firstChild);
+        }
+      });
+
+      menu.addEventListener('menu:confirm', (e) => {
+        const entry = document.createElement('div');
+        entry.className = 'entry confirm';
+        const item = e.detail.item;
+        const path = item.path || item.value || item;
+        entry.textContent = `CONFIRMED: ${item.label || item} → ${path}`;
+        log.appendChild(entry);
+
+        // Keep log short
+        while (log.children.length > 5) {
+          log.removeChild(log.firstChild);
+        }
+      });
+    }
+
+    setupDemo('demo1', 'log1');
+    setupDemo('demo2', 'log2');
+    setupDemo('demo3', 'log3');
+  </script>
+</body>
+</html>
