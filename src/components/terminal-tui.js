@@ -318,11 +318,30 @@ class TerminalTUI extends HTMLElement {
         padding: 0.5rem 1rem;
       }
 
+      /* Fade transitions for menu/prompt toggle */
+      terminal-menu,
+      terminal-prompt {
+        transition: opacity 0.15s ease-out;
+      }
+
+      terminal-menu[style*="display: none"],
+      terminal-prompt[style*="display: none"] {
+        opacity: 0;
+      }
+
       /* Ensure child components are loaded */
       terminal-output:not(:defined),
       terminal-menu:not(:defined),
       terminal-prompt:not(:defined) {
         display: none;
+      }
+
+      /* Reduced motion */
+      @media (prefers-reduced-motion: reduce) {
+        terminal-menu,
+        terminal-prompt {
+          transition: none;
+        }
       }
     `;
   }

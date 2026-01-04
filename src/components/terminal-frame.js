@@ -123,6 +123,16 @@ class TerminalFrame extends HTMLElement {
       .terminal-title {
         font-weight: bold;
         text-shadow: 0 0 10px var(--term-text), 0 0 20px var(--term-text);
+        animation: glow-pulse 3s ease-in-out infinite;
+      }
+
+      @keyframes glow-pulse {
+        0%, 100% {
+          text-shadow: 0 0 10px var(--term-text), 0 0 20px var(--term-text);
+        }
+        50% {
+          text-shadow: 0 0 15px var(--term-text), 0 0 30px var(--term-text), 0 0 40px var(--term-text);
+        }
       }
 
       .terminal-indicators {
@@ -200,6 +210,13 @@ class TerminalFrame extends HTMLElement {
 
       .terminal-frame:hover .terminal-content {
         border-color: var(--term-highlight);
+      }
+
+      /* Reduced motion */
+      @media (prefers-reduced-motion: reduce) {
+        .terminal-title {
+          animation: none;
+        }
       }
     `;
   }
