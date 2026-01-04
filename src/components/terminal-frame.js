@@ -74,7 +74,7 @@ class TerminalFrame extends HTMLElement {
       .terminal-frame {
         display: flex;
         flex-direction: column;
-        min-height: 100%;
+        height: 100%;
         position: relative;
       }
 
@@ -132,7 +132,9 @@ class TerminalFrame extends HTMLElement {
 
       .terminal-content {
         flex: 1;
-        padding: 1.5rem;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
         border-left: 1px solid var(--term-dim);
         border-right: 1px solid var(--term-dim);
         position: relative;
@@ -182,9 +184,12 @@ class TerminalFrame extends HTMLElement {
         letter-spacing: 0.05em;
       }
 
-      /* Glow effect for slotted content */
+      /* Slotted content fills available space */
       ::slotted(*) {
-        text-shadow: 0 0 5px var(--term-text);
+        flex: 1;
+        min-height: 0;
+        display: flex;
+        flex-direction: column;
       }
 
       /* Border glow on hover */
