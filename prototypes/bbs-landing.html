@@ -1,0 +1,1217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>29F_ BBS Landing - Prototype</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --term-bg: #011518;
+      --term-text: #26A69A;
+      --term-accent: #FFD600;
+      --term-dim: #0C3A38;
+      --term-highlight: #1D7A74;
+      --term-magenta: #FF0080;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Fira Code', monospace;
+      background: var(--term-bg);
+      color: var(--term-text);
+      min-height: 100vh;
+      padding: 2rem;
+      line-height: 1.5;
+      overflow-x: hidden;
+    }
+
+    .bbs-container {
+      max-width: 800px;
+      margin: 0 auto;
+      overflow: hidden;
+    }
+
+    /* Logo Section */
+    .logo-section {
+      text-align: center;
+      padding: 2rem 0;
+    }
+
+    .logo-svg {
+      filter: drop-shadow(0 0 10px rgba(38, 166, 154, 0.5));
+      max-width: 100%;
+      height: auto;
+    }
+
+    /* Dividers */
+    .divider {
+      border: none;
+      height: 1px;
+      margin: 1.5rem 0;
+      background: var(--term-dim);
+    }
+
+    .divider-double {
+      height: 3px;
+      background: linear-gradient(
+        to bottom,
+        var(--term-dim) 0px,
+        transparent 1px,
+        transparent 2px,
+        var(--term-dim) 2px
+      );
+    }
+
+    /* Animated gradient divider */
+    .divider-animated {
+      height: 2px;
+      background: linear-gradient(
+        90deg,
+        var(--term-dim) 0%,
+        var(--term-text) 25%,
+        var(--term-accent) 50%,
+        var(--term-text) 75%,
+        var(--term-dim) 100%
+      );
+      background-size: 200% 100%;
+      animation: divider-pulse 4s ease-in-out infinite;
+    }
+
+    @keyframes divider-pulse {
+      0%, 100% { background-position: 0% 0%; }
+      50% { background-position: 100% 0%; }
+    }
+
+    /* Sweep divider - solid bar with moving gradient highlight */
+    .divider-sweep {
+      height: 4px;
+      background: var(--term-dim);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .divider-sweep::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(
+        90deg,
+        transparent 0%,
+        transparent 35%,
+        var(--term-text) 45%,
+        var(--term-accent) 50%,
+        var(--term-text) 55%,
+        transparent 65%,
+        transparent 100%
+      );
+      background-size: 200% 100%;
+      animation: sweep 3s ease-in-out infinite;
+    }
+
+    @keyframes sweep {
+      0% { background-position: 100% 0; }
+      100% { background-position: -100% 0; }
+    }
+
+    /* Double line sweep */
+    .divider-sweep-double {
+      height: 6px;
+      background: linear-gradient(
+        to bottom,
+        var(--term-dim) 0px,
+        var(--term-dim) 2px,
+        transparent 2px,
+        transparent 4px,
+        var(--term-dim) 4px,
+        var(--term-dim) 6px
+      );
+      position: relative;
+      overflow: hidden;
+    }
+
+    .divider-sweep-double::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(
+        90deg,
+        transparent 0%,
+        transparent 40%,
+        var(--term-highlight) 45%,
+        var(--term-text) 50%,
+        var(--term-highlight) 55%,
+        transparent 60%,
+        transparent 100%
+      );
+      background-size: 200% 100%;
+      animation: sweep-double 4s ease-in-out infinite;
+    }
+
+    @keyframes sweep-double {
+      0% { background-position: 100% 0; }
+      100% { background-position: -100% 0; }
+    }
+
+    /* System Message */
+    .system-message {
+      margin: 1.5rem 0;
+    }
+
+    .system-message-label {
+      color: var(--term-dim);
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .system-message-label::before {
+      content: '◆';
+      color: var(--term-text);
+      animation: indicator-pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes indicator-pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+
+    .system-message-box {
+      border: 1px solid var(--term-dim);
+      padding: 1rem 1.5rem;
+      position: relative;
+      background: rgba(0, 0, 0, 0.2);
+    }
+
+    /* Box-drawing corners */
+    .system-message-box::before {
+      content: '╔';
+      position: absolute;
+      top: -0.6em;
+      left: -0.1em;
+      color: var(--term-highlight);
+      font-size: 1.2em;
+    }
+
+    .system-message-box::after {
+      content: '╗';
+      position: absolute;
+      top: -0.6em;
+      right: -0.1em;
+      color: var(--term-highlight);
+      font-size: 1.2em;
+    }
+
+    .system-message-box .corner-bl {
+      position: absolute;
+      bottom: -0.6em;
+      left: -0.1em;
+      color: var(--term-highlight);
+      font-size: 1.2em;
+    }
+
+    .system-message-box .corner-br {
+      position: absolute;
+      bottom: -0.6em;
+      right: -0.1em;
+      color: var(--term-highlight);
+      font-size: 1.2em;
+    }
+
+    .system-message-text {
+      color: var(--term-text);
+    }
+
+    .system-message-text .highlight {
+      color: var(--term-accent);
+      text-shadow: 0 0 8px var(--term-accent);
+    }
+
+    /* Two Column Layout */
+    .two-column {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      margin: 1.5rem 0;
+    }
+
+    @media (max-width: 600px) {
+      .two-column {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Section Headers */
+    .section-header {
+      color: var(--term-accent);
+      font-size: 0.875rem;
+      font-weight: bold;
+      margin-bottom: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .section-header::before {
+      content: '▸';
+      color: var(--term-text);
+      animation: header-glow 3s ease-in-out infinite;
+    }
+
+    .section-header::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(90deg, var(--term-dim), transparent);
+      margin-left: 0.5rem;
+    }
+
+    @keyframes header-glow {
+      0%, 100% {
+        color: var(--term-text);
+        text-shadow: none;
+      }
+      50% {
+        color: var(--term-accent);
+        text-shadow: 0 0 8px var(--term-accent);
+      }
+    }
+
+    /* Main Menu */
+    .menu-list {
+      list-style: none;
+    }
+
+    .menu-item {
+      display: flex;
+      align-items: center;
+      padding: 0.35rem 0;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .menu-item:hover {
+      color: var(--term-accent);
+      padding-left: 0.5rem;
+    }
+
+    .menu-item:hover .menu-bullet {
+      color: var(--term-accent);
+      text-shadow: 0 0 8px var(--term-accent);
+    }
+
+    .menu-item:hover .menu-key {
+      background: var(--term-accent);
+      color: var(--term-bg);
+      box-shadow: 0 0 8px var(--term-accent);
+    }
+
+    .menu-bullet {
+      color: var(--term-dim);
+      margin-right: 0.5rem;
+      transition: all 0.15s ease;
+    }
+
+    .menu-key {
+      color: var(--term-accent);
+      margin-right: 0.25rem;
+      padding: 0 0.15rem;
+      transition: all 0.15s ease;
+    }
+
+    .menu-label {
+      margin-right: 0.5rem;
+    }
+
+    .menu-dots {
+      flex: 1;
+      border-bottom: 1px dotted var(--term-dim);
+      margin: 0 0.5rem;
+      min-width: 20px;
+    }
+
+    .menu-count {
+      color: var(--term-dim);
+      font-size: 0.875rem;
+    }
+
+    /* System Status */
+    .status-list {
+      list-style: none;
+    }
+
+    .status-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.35rem 0;
+      font-size: 0.875rem;
+    }
+
+    .status-label {
+      color: var(--term-dim);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .status-label::before {
+      content: '○';
+      font-size: 0.6em;
+    }
+
+    .status-value {
+      color: var(--term-text);
+      font-family: inherit;
+    }
+
+    .status-value.nominal {
+      color: var(--term-accent);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .status-value.nominal::before {
+      content: '●';
+      animation: status-blink 1.5s ease-in-out infinite;
+    }
+
+    @keyframes status-blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+
+    /* Status indicators */
+    .status-indicator {
+      display: inline-flex;
+      gap: 2px;
+      margin-left: 0.5rem;
+    }
+
+    .status-indicator span {
+      display: inline-block;
+      width: 6px;
+      height: 10px;
+      background: var(--term-dim);
+    }
+
+    .status-indicator span.active {
+      background: var(--term-text);
+    }
+
+    .status-indicator span.high {
+      background: var(--term-accent);
+    }
+
+    /* Progress bar style */
+    .status-bar {
+      display: inline-flex;
+      font-size: 0.75rem;
+      letter-spacing: -1px;
+    }
+
+    .status-bar .filled {
+      color: var(--term-text);
+    }
+
+    .status-bar .empty {
+      color: var(--term-dim);
+    }
+
+    /* Recent Transmissions */
+    .transmission-list {
+      list-style: none;
+    }
+
+    .transmission-item {
+      padding: 0.25rem 0;
+      display: flex;
+      align-items: flex-start;
+    }
+
+    .transmission-arrow {
+      color: var(--term-accent);
+      margin-right: 0.5rem;
+    }
+
+    .transmission-link {
+      color: var(--term-text);
+      text-decoration: none;
+      transition: color 0.15s ease;
+    }
+
+    .transmission-link:hover {
+      color: var(--term-accent);
+    }
+
+    /* SysOp Section - Character Profile Style */
+    .sysop-card {
+      border: 1px solid var(--term-dim);
+      background: rgba(0, 0, 0, 0.3);
+      position: relative;
+      padding: 1rem;
+    }
+
+    /* Box drawing corners on card */
+    .sysop-card::before {
+      content: '╔';
+      position: absolute;
+      top: -0.5em;
+      left: -0.25em;
+      color: var(--term-highlight);
+      font-size: 1.2em;
+    }
+
+    .sysop-card::after {
+      content: '╗';
+      position: absolute;
+      top: -0.5em;
+      right: -0.25em;
+      color: var(--term-highlight);
+      font-size: 1.2em;
+    }
+
+    .sysop-card-corner {
+      position: absolute;
+      color: var(--term-highlight);
+      font-size: 1.2em;
+      line-height: 1;
+    }
+
+    .sysop-card-corner.bl { bottom: -0.5em; left: -0.25em; }
+    .sysop-card-corner.br { bottom: -0.5em; right: -0.25em; }
+
+    .sysop-card-inner {
+      display: grid;
+      grid-template-columns: 80px 1fr;
+      gap: 1rem;
+      align-items: start;
+    }
+
+    .sysop-portrait {
+      position: relative;
+      width: 80px;
+      height: 80px;
+      margin: 8px;
+    }
+
+    .sysop-photo {
+      width: 100%;
+      height: 100%;
+      border: 1px solid var(--term-dim);
+      image-rendering: pixelated;
+      background: var(--term-bg);
+    }
+
+    .sysop-portrait-corner {
+      position: absolute;
+      color: var(--term-text);
+      font-size: 0.9em;
+      line-height: 1;
+    }
+
+    .sysop-portrait-corner.tl { top: -8px; left: -8px; }
+    .sysop-portrait-corner.tr { top: -8px; right: -8px; }
+    .sysop-portrait-corner.bl { bottom: -8px; left: -8px; }
+    .sysop-portrait-corner.br { bottom: -8px; right: -8px; }
+
+    .sysop-stats {
+      font-size: 0.8rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+    }
+
+    .sysop-name {
+      color: var(--term-accent);
+      font-weight: bold;
+      font-size: 1rem;
+      text-shadow: 0 0 10px var(--term-accent);
+      margin-bottom: 0.25rem;
+    }
+
+    .sysop-class {
+      color: var(--term-text);
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 0.5rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--term-dim);
+    }
+
+    .sysop-stat {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .sysop-stat-label {
+      color: var(--term-dim);
+      font-size: 0.7rem;
+      text-transform: uppercase;
+    }
+
+    .sysop-stat-value {
+      color: var(--term-text);
+    }
+
+    .sysop-stat-bar {
+      display: flex;
+      gap: 1px;
+      margin-left: 0.5rem;
+    }
+
+    .sysop-stat-bar span {
+      width: 8px;
+      height: 6px;
+      background: var(--term-dim);
+    }
+
+    .sysop-stat-bar span.filled {
+      background: var(--term-text);
+    }
+
+    .sysop-stat-bar span.filled.high {
+      background: var(--term-accent);
+    }
+
+    .sysop-skills {
+      margin-top: 0.5rem;
+      padding-top: 0.5rem;
+      border-top: 1px solid var(--term-dim);
+    }
+
+    .sysop-skills-label {
+      color: var(--term-dim);
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      margin-bottom: 0.25rem;
+    }
+
+    .sysop-skills-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.25rem;
+    }
+
+    .sysop-skill {
+      font-size: 0.65rem;
+      color: var(--term-highlight);
+      padding: 0.1rem 0.3rem;
+      border: 1px solid var(--term-dim);
+      background: rgba(0, 0, 0, 0.3);
+    }
+
+    /* Wireframe Element */
+    .wireframe-section {
+      display: flex;
+      justify-content: center;
+      padding: 2rem 0;
+    }
+
+    .wireframe-container {
+      width: 100px;
+      height: 100px;
+      perspective: 400px;
+    }
+
+    .wireframe-cube {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      transform-style: preserve-3d;
+      animation: rotate-cube 20s linear infinite;
+    }
+
+    @keyframes rotate-cube {
+      from {
+        transform: rotateX(0deg) rotateY(0deg);
+      }
+      to {
+        transform: rotateX(360deg) rotateY(360deg);
+      }
+    }
+
+    .wireframe-face {
+      position: absolute;
+      width: 60px;
+      height: 60px;
+      border: 1px solid;
+      left: 50%;
+      top: 50%;
+      margin-left: -30px;
+      margin-top: -30px;
+      background: transparent;
+    }
+
+    .wireframe-face:nth-child(1) { transform: translateZ(30px); }
+    .wireframe-face:nth-child(2) { transform: rotateY(180deg) translateZ(30px); }
+    .wireframe-face:nth-child(3) { transform: rotateY(90deg) translateZ(30px); }
+    .wireframe-face:nth-child(4) { transform: rotateY(-90deg) translateZ(30px); }
+    .wireframe-face:nth-child(5) { transform: rotateX(90deg) translateZ(30px); }
+    .wireframe-face:nth-child(6) { transform: rotateX(-90deg) translateZ(30px); }
+
+    /* Color cycling for wireframe */
+    .wireframe-face {
+      animation: color-cycle 4s linear infinite;
+    }
+
+    .wireframe-face:nth-child(2) { animation-delay: -0.66s; }
+    .wireframe-face:nth-child(3) { animation-delay: -1.33s; }
+    .wireframe-face:nth-child(4) { animation-delay: -2s; }
+    .wireframe-face:nth-child(5) { animation-delay: -2.66s; }
+    .wireframe-face:nth-child(6) { animation-delay: -3.33s; }
+
+    @keyframes color-cycle {
+      0%, 100% { border-color: var(--term-text); }
+      33% { border-color: var(--term-accent); }
+      66% { border-color: var(--term-magenta); }
+    }
+
+    /* Greets Footer */
+    .greets-section {
+      text-align: center;
+      padding: 1rem;
+      background: rgba(0, 0, 0, 0.2);
+      margin-top: 1.5rem;
+      overflow: hidden;
+    }
+
+    .greets-text {
+      color: var(--term-dim);
+      font-size: 0.875rem;
+      white-space: nowrap;
+      animation: greets-scroll 30s linear infinite;
+    }
+
+    @keyframes greets-scroll {
+      0% { transform: translateX(100%); }
+      100% { transform: translateX(-100%); }
+    }
+
+    .greets-text span {
+      color: var(--term-highlight);
+    }
+
+    /* Reduced motion */
+    @media (prefers-reduced-motion: reduce) {
+      .wireframe-cube,
+      .wireframe-face,
+      .greets-text,
+      .divider-animated,
+      .divider-sweep::after,
+      .divider-sweep-double::after,
+      .system-message-label::before,
+      .section-header::before,
+      .status-value.nominal::before {
+        animation: none;
+      }
+
+      .wireframe-face {
+        border-color: var(--term-text);
+      }
+
+      .divider-animated {
+        background: var(--term-dim);
+      }
+
+      .divider-sweep::after,
+      .divider-sweep-double::after {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="bbs-container">
+
+    <!-- Logo -->
+    <section class="logo-section">
+      <svg class="logo-svg" width="540" height="140" viewBox="0 0 54 14">
+        <defs>
+          <!-- Animated gradient -->
+          <linearGradient id="logo-gradient" x1="0%" y1="0%" x2="100%" y2="50%">
+            <stop offset="0%">
+              <animate attributeName="stop-color" values="#26A69A;#FFD600;#FF0080;#00FFFF;#26A69A" dur="6s" repeatCount="indefinite"/>
+            </stop>
+            <stop offset="33%">
+              <animate attributeName="stop-color" values="#FFD600;#FF0080;#00FFFF;#26A69A;#FFD600" dur="6s" repeatCount="indefinite"/>
+            </stop>
+            <stop offset="66%">
+              <animate attributeName="stop-color" values="#FF0080;#00FFFF;#26A69A;#FFD600;#FF0080" dur="6s" repeatCount="indefinite"/>
+            </stop>
+            <stop offset="100%">
+              <animate attributeName="stop-color" values="#00FFFF;#26A69A;#FFD600;#FF0080;#00FFFF" dur="6s" repeatCount="indefinite"/>
+            </stop>
+          </linearGradient>
+
+          <!-- Mask with grayscale shading -->
+          <mask id="logo-mask">
+            <!-- 2 -->
+            <rect fill="#1a1a1a" x="2" y="0" width="1" height="1"/>
+            <rect fill="#333" x="3" y="0" width="1" height="1"/>
+            <rect fill="#666" x="4" y="0" width="1" height="1"/>
+            <rect fill="#999" x="5" y="0" width="1" height="1"/>
+            <rect fill="#fff" x="6" y="0" width="4" height="1"/>
+            <rect fill="#999" x="10" y="0" width="1" height="1"/>
+            <rect fill="#666" x="11" y="0" width="1" height="1"/>
+            <rect fill="#333" x="12" y="0" width="1" height="1"/>
+            <rect fill="#333" x="3" y="1" width="1" height="1"/>
+            <rect fill="#999" x="4" y="1" width="1" height="1"/>
+            <rect fill="#fff" x="5" y="1" width="2" height="1"/>
+            <rect fill="#999" x="7" y="1" width="2" height="1"/>
+            <rect fill="#fff" x="9" y="1" width="2" height="1"/>
+            <rect fill="#ccc" x="11" y="1" width="1" height="1"/>
+            <rect fill="#666" x="12" y="1" width="1" height="1"/>
+            <rect fill="#1a1a1a" x="7" y="2" width="2" height="1"/>
+            <rect fill="#666" x="9" y="2" width="1" height="1"/>
+            <rect fill="#ccc" x="10" y="2" width="1" height="1"/>
+            <rect fill="#fff" x="11" y="2" width="2" height="1"/>
+            <rect fill="#333" x="8" y="3" width="1" height="1"/>
+            <rect fill="#999" x="9" y="3" width="1" height="1"/>
+            <rect fill="#fff" x="10" y="3" width="2" height="1"/>
+            <rect fill="#999" x="12" y="3" width="1" height="1"/>
+            <rect fill="#1a1a1a" x="2" y="4" width="1" height="1"/>
+            <rect fill="#333" x="3" y="4" width="1" height="1"/>
+            <rect fill="#666" x="4" y="4" width="1" height="1"/>
+            <rect fill="#999" x="5" y="4" width="1" height="1"/>
+            <rect fill="#ccc" x="6" y="4" width="1" height="1"/>
+            <rect fill="#fff" x="7" y="4" width="4" height="1"/>
+            <rect fill="#999" x="11" y="4" width="1" height="1"/>
+            <rect fill="#666" x="12" y="4" width="1" height="1"/>
+            <rect fill="#666" x="3" y="5" width="1" height="1"/>
+            <rect fill="#ccc" x="4" y="5" width="1" height="1"/>
+            <rect fill="#fff" x="5" y="5" width="4" height="1"/>
+            <rect fill="#999" x="9" y="5" width="1" height="1"/>
+            <rect fill="#333" x="10" y="5" width="2" height="1"/>
+            <rect fill="#999" x="2" y="6" width="1" height="1"/>
+            <rect fill="#fff" x="3" y="6" width="3" height="1"/>
+            <rect fill="#999" x="6" y="6" width="1" height="1"/>
+            <rect fill="#333" x="7" y="6" width="3" height="1"/>
+            <rect fill="#fff" x="2" y="7" width="3" height="1"/>
+            <rect fill="#ccc" x="5" y="7" width="1" height="1"/>
+            <rect fill="#666" x="6" y="7" width="1" height="1"/>
+            <rect fill="#1a1a1a" x="7" y="7" width="3" height="1"/>
+            <rect fill="#fff" x="2" y="8" width="4" height="1"/>
+            <rect fill="#ccc" x="6" y="8" width="1" height="1"/>
+            <rect fill="#999" x="7" y="8" width="1" height="1"/>
+            <rect fill="#ccc" x="8" y="8" width="1" height="1"/>
+            <rect fill="#fff" x="9" y="8" width="4" height="1"/>
+            <rect fill="#ccc" x="2" y="9" width="1" height="1"/>
+            <rect fill="#fff" x="3" y="9" width="8" height="1"/>
+            <rect fill="#ccc" x="11" y="9" width="1" height="1"/>
+            <rect fill="#666" x="12" y="9" width="1" height="1"/>
+            <rect fill="#333" x="2" y="10" width="1" height="1"/>
+            <rect fill="#666" x="3" y="10" width="1" height="1"/>
+            <rect fill="#999" x="4" y="10" width="7" height="1"/>
+            <rect fill="#666" x="11" y="10" width="1" height="1"/>
+            <rect fill="#333" x="12" y="10" width="1" height="1"/>
+
+            <!-- 9 -->
+            <rect fill="#1a1a1a" x="16" y="0" width="1" height="1"/>
+            <rect fill="#333" x="17" y="0" width="1" height="1"/>
+            <rect fill="#666" x="18" y="0" width="1" height="1"/>
+            <rect fill="#999" x="19" y="0" width="1" height="1"/>
+            <rect fill="#fff" x="20" y="0" width="4" height="1"/>
+            <rect fill="#999" x="24" y="0" width="1" height="1"/>
+            <rect fill="#666" x="25" y="0" width="1" height="1"/>
+            <rect fill="#333" x="26" y="0" width="1" height="1"/>
+            <rect fill="#1a1a1a" x="27" y="0" width="1" height="1"/>
+            <rect fill="#666" x="17" y="1" width="1" height="1"/>
+            <rect fill="#ccc" x="18" y="1" width="1" height="1"/>
+            <rect fill="#fff" x="19" y="1" width="2" height="1"/>
+            <rect fill="#666" x="21" y="1" width="2" height="1"/>
+            <rect fill="#fff" x="23" y="1" width="2" height="1"/>
+            <rect fill="#ccc" x="25" y="1" width="1" height="1"/>
+            <rect fill="#999" x="26" y="1" width="1" height="1"/>
+            <rect fill="#ccc" x="17" y="2" width="1" height="1"/>
+            <rect fill="#fff" x="18" y="2" width="2" height="1"/>
+            <rect fill="#666" x="20" y="2" width="1" height="1"/>
+            <rect fill="#1a1a1a" x="21" y="2" width="2" height="1"/>
+            <rect fill="#666" x="23" y="2" width="1" height="1"/>
+            <rect fill="#fff" x="24" y="2" width="2" height="1"/>
+            <rect fill="#ccc" x="26" y="2" width="1" height="1"/>
+            <rect fill="#fff" x="17" y="3" width="2" height="1"/>
+            <rect fill="#999" x="19" y="3" width="1" height="1"/>
+            <rect fill="#333" x="20" y="3" width="3" height="1"/>
+            <rect fill="#999" x="23" y="3" width="1" height="1"/>
+            <rect fill="#fff" x="24" y="3" width="2" height="1"/>
+            <rect fill="#999" x="17" y="4" width="1" height="1"/>
+            <rect fill="#fff" x="18" y="4" width="2" height="1"/>
+            <rect fill="#999" x="20" y="4" width="1" height="1"/>
+            <rect fill="#666" x="21" y="4" width="1" height="1"/>
+            <rect fill="#999" x="22" y="4" width="1" height="1"/>
+            <rect fill="#fff" x="23" y="4" width="3" height="1"/>
+            <rect fill="#ccc" x="26" y="4" width="1" height="1"/>
+            <rect fill="#333" x="17" y="5" width="1" height="1"/>
+            <rect fill="#999" x="18" y="5" width="1" height="1"/>
+            <rect fill="#fff" x="19" y="5" width="5" height="1"/>
+            <rect fill="#ccc" x="24" y="5" width="1" height="1"/>
+            <rect fill="#fff" x="25" y="5" width="2" height="1"/>
+            <rect fill="#1a1a1a" x="18" y="6" width="1" height="1"/>
+            <rect fill="#666" x="19" y="6" width="1" height="1"/>
+            <rect fill="#999" x="20" y="6" width="3" height="1"/>
+            <rect fill="#666" x="23" y="6" width="1" height="1"/>
+            <rect fill="#ccc" x="24" y="6" width="1" height="1"/>
+            <rect fill="#fff" x="25" y="6" width="2" height="1"/>
+            <rect fill="#1a1a1a" x="21" y="7" width="2" height="1"/>
+            <rect fill="#666" x="23" y="7" width="1" height="1"/>
+            <rect fill="#ccc" x="24" y="7" width="1" height="1"/>
+            <rect fill="#fff" x="25" y="7" width="2" height="1"/>
+            <rect fill="#333" x="22" y="8" width="1" height="1"/>
+            <rect fill="#999" x="23" y="8" width="1" height="1"/>
+            <rect fill="#fff" x="24" y="8" width="2" height="1"/>
+            <rect fill="#ccc" x="26" y="8" width="1" height="1"/>
+            <rect fill="#1a1a1a" x="16" y="9" width="1" height="1"/>
+            <rect fill="#333" x="17" y="9" width="1" height="1"/>
+            <rect fill="#666" x="18" y="9" width="1" height="1"/>
+            <rect fill="#999" x="19" y="9" width="1" height="1"/>
+            <rect fill="#fff" x="20" y="9" width="4" height="1"/>
+            <rect fill="#ccc" x="24" y="9" width="1" height="1"/>
+            <rect fill="#999" x="25" y="9" width="1" height="1"/>
+            <rect fill="#666" x="26" y="9" width="1" height="1"/>
+            <rect fill="#1a1a1a" x="17" y="10" width="1" height="1"/>
+            <rect fill="#333" x="18" y="10" width="1" height="1"/>
+            <rect fill="#666" x="19" y="10" width="5" height="1"/>
+            <rect fill="#333" x="24" y="10" width="1" height="1"/>
+            <rect fill="#1a1a1a" x="25" y="10" width="1" height="1"/>
+
+            <!-- F -->
+            <rect fill="#1a1a1a" x="31" y="0" width="1" height="1"/>
+            <rect fill="#333" x="32" y="0" width="1" height="1"/>
+            <rect fill="#666" x="33" y="0" width="1" height="1"/>
+            <rect fill="#fff" x="34" y="0" width="8" height="1"/>
+            <rect fill="#999" x="42" y="0" width="1" height="1"/>
+            <rect fill="#666" x="43" y="0" width="1" height="1"/>
+            <rect fill="#333" x="44" y="0" width="1" height="1"/>
+            <rect fill="#666" x="32" y="1" width="1" height="1"/>
+            <rect fill="#ccc" x="33" y="1" width="1" height="1"/>
+            <rect fill="#fff" x="34" y="1" width="7" height="1"/>
+            <rect fill="#999" x="41" y="1" width="1" height="1"/>
+            <rect fill="#333" x="42" y="1" width="2" height="1"/>
+            <rect fill="#ccc" x="32" y="2" width="1" height="1"/>
+            <rect fill="#fff" x="33" y="2" width="3" height="1"/>
+            <rect fill="#999" x="36" y="2" width="1" height="1"/>
+            <rect fill="#333" x="37" y="2" width="4" height="1"/>
+            <rect fill="#fff" x="32" y="3" width="3" height="1"/>
+            <rect fill="#ccc" x="35" y="3" width="1" height="1"/>
+            <rect fill="#666" x="36" y="3" width="1" height="1"/>
+            <rect fill="#1a1a1a" x="37" y="3" width="3" height="1"/>
+            <rect fill="#fff" x="32" y="4" width="3" height="1"/>
+            <rect fill="#999" x="35" y="4" width="1" height="1"/>
+            <rect fill="#ccc" x="36" y="4" width="1" height="1"/>
+            <rect fill="#fff" x="37" y="4" width="5" height="1"/>
+            <rect fill="#999" x="42" y="4" width="1" height="1"/>
+            <rect fill="#666" x="43" y="4" width="1" height="1"/>
+            <rect fill="#fff" x="32" y="5" width="3" height="1"/>
+            <rect fill="#ccc" x="35" y="5" width="1" height="1"/>
+            <rect fill="#fff" x="36" y="5" width="4" height="1"/>
+            <rect fill="#999" x="40" y="5" width="1" height="1"/>
+            <rect fill="#333" x="41" y="5" width="2" height="1"/>
+            <rect fill="#fff" x="32" y="6" width="3" height="1"/>
+            <rect fill="#999" x="35" y="6" width="1" height="1"/>
+            <rect fill="#333" x="36" y="6" width="3" height="1"/>
+            <rect fill="#fff" x="32" y="7" width="3" height="1"/>
+            <rect fill="#ccc" x="35" y="7" width="1" height="1"/>
+            <rect fill="#666" x="36" y="7" width="1" height="1"/>
+            <rect fill="#fff" x="32" y="8" width="3" height="1"/>
+            <rect fill="#999" x="35" y="8" width="1" height="1"/>
+            <rect fill="#ccc" x="32" y="9" width="1" height="1"/>
+            <rect fill="#fff" x="33" y="9" width="2" height="1"/>
+            <rect fill="#ccc" x="35" y="9" width="1" height="1"/>
+            <rect fill="#666" x="36" y="9" width="1" height="1"/>
+            <rect fill="#333" x="32" y="10" width="1" height="1"/>
+            <rect fill="#666" x="33" y="10" width="1" height="1"/>
+            <rect fill="#999" x="34" y="10" width="1" height="1"/>
+            <rect fill="#666" x="35" y="10" width="1" height="1"/>
+            <rect fill="#333" x="36" y="10" width="1" height="1"/>
+
+            <!-- Underscore -->
+            <rect fill="#fff" class="underscore" x="47" y="8" width="6" height="2"/>
+            <rect fill="#ccc" class="underscore" x="46" y="9" width="1" height="1"/>
+            <rect fill="#999" class="underscore" x="46" y="8" width="1" height="1"/>
+            <rect fill="#666" class="underscore" x="45" y="9" width="1" height="1"/>
+            <rect fill="#ccc" class="underscore" x="53" y="8" width="1" height="1"/>
+            <rect fill="#999" class="underscore" x="53" y="9" width="1" height="1"/>
+            <rect fill="#666" class="underscore" x="47" y="10" width="6" height="1"/>
+            <rect fill="#333" class="underscore" x="46" y="10" width="1" height="1"/>
+          </mask>
+        </defs>
+
+        <!-- Gradient rectangle with mask applied -->
+        <rect x="0" y="0" width="54" height="14" fill="url(#logo-gradient)" mask="url(#logo-mask)"/>
+      </svg>
+    </section>
+
+    <div class="divider divider-animated"></div>
+
+    <!-- System Message -->
+    <section class="system-message">
+      <div class="system-message-label">System Message:</div>
+      <div class="system-message-box">
+        <span class="corner-bl">╚</span>
+        <span class="corner-br">╝</span>
+        <p class="system-message-text">
+          Welcome back, traveler. You've been gone <span class="highlight" id="days-gone">847</span> days.
+          I kept the lights on. You're welcome.
+        </p>
+      </div>
+    </section>
+
+    <div class="divider divider-sweep"></div>
+
+    <!-- Menu + Status -->
+    <div class="two-column">
+      <section class="menu-section">
+        <h2 class="section-header">Main Menu</h2>
+        <ul class="menu-list">
+          <li class="menu-item" data-path="/blog">
+            <span class="menu-bullet">◇</span>
+            <span class="menu-key">[B]</span>
+            <span class="menu-label">log</span>
+            <span class="menu-dots"></span>
+            <span class="menu-count">12 entries</span>
+          </li>
+          <li class="menu-item" data-path="/work">
+            <span class="menu-bullet">◇</span>
+            <span class="menu-key">[W]</span>
+            <span class="menu-label">ork</span>
+            <span class="menu-dots"></span>
+            <span class="menu-count">8 projects</span>
+          </li>
+          <li class="menu-item" data-path="/everyday">
+            <span class="menu-bullet">◇</span>
+            <span class="menu-key">[E]</span>
+            <span class="menu-label">veryday</span>
+            <span class="menu-dots"></span>
+            <span class="menu-count">365+ posts</span>
+          </li>
+          <li class="menu-item" data-path="/about">
+            <span class="menu-bullet">◇</span>
+            <span class="menu-key">[A]</span>
+            <span class="menu-label">bout</span>
+            <span class="menu-dots"></span>
+            <span class="menu-count"></span>
+          </li>
+          <li class="menu-item" data-path="/contact">
+            <span class="menu-bullet">◇</span>
+            <span class="menu-key">[C]</span>
+            <span class="menu-label">ontact</span>
+            <span class="menu-dots"></span>
+            <span class="menu-count"></span>
+          </li>
+        </ul>
+      </section>
+
+      <section class="status-section">
+        <h2 class="section-header">System Status</h2>
+        <ul class="status-list">
+          <li class="status-item">
+            <span class="status-label">UPTIME:</span>
+            <span class="status-value" id="uptime">29y 4m 17d</span>
+          </li>
+          <li class="status-item">
+            <span class="status-label">VISITORS:</span>
+            <span class="status-value">1,337</span>
+          </li>
+          <li class="status-item">
+            <span class="status-label">MEMORY:</span>
+            <span class="status-value">
+              <span class="status-bar"><span class="filled">████████</span><span class="empty">██</span></span>
+            </span>
+          </li>
+          <li class="status-item">
+            <span class="status-label">NODE:</span>
+            <span class="status-value">
+              7/7
+              <span class="status-indicator">
+                <span class="active"></span>
+                <span class="active"></span>
+                <span class="active"></span>
+                <span class="active"></span>
+                <span class="active"></span>
+                <span class="active high"></span>
+                <span class="active high"></span>
+              </span>
+            </span>
+          </li>
+          <li class="status-item">
+            <span class="status-label">STATUS:</span>
+            <span class="status-value nominal">NOMINAL</span>
+          </li>
+        </ul>
+      </section>
+    </div>
+
+    <div class="divider divider-animated"></div>
+
+    <!-- Transmissions + SysOp -->
+    <div class="two-column">
+      <section class="transmissions-section">
+        <h2 class="section-header">Recent Transmissions</h2>
+        <ul class="transmission-list">
+          <li class="transmission-item">
+            <span class="transmission-arrow">►</span>
+            <a href="#" class="transmission-link">Making procedural textures with noise functions</a>
+          </li>
+          <li class="transmission-item">
+            <span class="transmission-arrow">►</span>
+            <a href="#" class="transmission-link">Why I switched to a terminal-based workflow</a>
+          </li>
+          <li class="transmission-item">
+            <span class="transmission-arrow">►</span>
+            <a href="#" class="transmission-link">Notes on demoscene history and culture</a>
+          </li>
+        </ul>
+      </section>
+
+      <section class="sysop-section-container">
+        <h2 class="section-header">SysOp</h2>
+        <div class="sysop-card">
+          <span class="sysop-card-corner bl">╚</span>
+          <span class="sysop-card-corner br">╝</span>
+          <div class="sysop-card-inner">
+            <div class="sysop-portrait">
+              <img src="../src/assets/sysop-placeholder.svg" alt="SysOp portrait" class="sysop-photo">
+              <span class="sysop-portrait-corner tl">┌</span>
+              <span class="sysop-portrait-corner tr">┐</span>
+              <span class="sysop-portrait-corner bl">└</span>
+              <span class="sysop-portrait-corner br">┘</span>
+            </div>
+            <div class="sysop-stats">
+              <div class="sysop-name">DANIEL MCFARLAND</div>
+              <div class="sysop-class">◆ System Operator ◆</div>
+              <div class="sysop-stat">
+                <span class="sysop-stat-label">LVL</span>
+                <span class="sysop-stat-value">42</span>
+              </div>
+              <div class="sysop-stat">
+                <span class="sysop-stat-label">LOC</span>
+                <span class="sysop-stat-value">PDX</span>
+              </div>
+              <div class="sysop-stat">
+                <span class="sysop-stat-label">HP</span>
+                <div class="sysop-stat-bar">
+                  <span class="filled"></span>
+                  <span class="filled"></span>
+                  <span class="filled"></span>
+                  <span class="filled"></span>
+                  <span class="filled high"></span>
+                  <span class="filled high"></span>
+                  <span></span>
+                  <span></span>
+                </div>
+              </div>
+              <div class="sysop-skills">
+                <div class="sysop-skills-label">Skills</div>
+                <div class="sysop-skills-list">
+                  <span class="sysop-skill">JS</span>
+                  <span class="sysop-skill">CSS</span>
+                  <span class="sysop-skill">DESIGN</span>
+                  <span class="sysop-skill">???</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- Wireframe Element -->
+    <section class="wireframe-section">
+      <div class="wireframe-container">
+        <div class="wireframe-cube">
+          <div class="wireframe-face"></div>
+          <div class="wireframe-face"></div>
+          <div class="wireframe-face"></div>
+          <div class="wireframe-face"></div>
+          <div class="wireframe-face"></div>
+          <div class="wireframe-face"></div>
+        </div>
+      </div>
+    </section>
+
+    <div class="divider divider-sweep-double"></div>
+
+    <!-- Greets -->
+    <section class="greets-section">
+      <div class="greets-text">
+        GREETS TO: <span>Future Farmers</span> • <span>Superflat</span> • <span>The Void Collective</span> • <span>Pixel Pushers Union</span> • <span>Night Shift Crew</span> • <span>Analog Dreams</span> • <span>The Render Farm</span> • <span>Bit Shifters</span> • <span>CRT Warriors</span> • <span>The Dither Crew</span>
+      </div>
+    </section>
+
+  </div>
+
+  <script>
+    // Calculate days since last visit
+    const lastVisit = localStorage.getItem('bbs-lastVisit');
+    const now = Date.now();
+    const daysGoneEl = document.getElementById('days-gone');
+
+    if (lastVisit) {
+      const days = Math.floor((now - parseInt(lastVisit)) / (1000 * 60 * 60 * 24));
+      daysGoneEl.textContent = days || 'zero';
+    } else {
+      // First visit - pick a random large number for fun
+      daysGoneEl.textContent = Math.floor(Math.random() * 1000) + 100;
+    }
+    localStorage.setItem('bbs-lastVisit', now.toString());
+
+    // Calculate uptime from "launch date"
+    const launchDate = new Date('1995-08-15');
+    const uptimeEl = document.getElementById('uptime');
+    const diff = now - launchDate.getTime();
+    const years = Math.floor(diff / (1000 * 60 * 60 * 24 * 365));
+    const months = Math.floor((diff % (1000 * 60 * 60 * 24 * 365)) / (1000 * 60 * 60 * 24 * 30));
+    const days = Math.floor((diff % (1000 * 60 * 60 * 24 * 30)) / (1000 * 60 * 60 * 24));
+    uptimeEl.textContent = `${years}y ${months}m ${days}d`;
+
+    // Menu click handlers
+    document.querySelectorAll('.menu-item').forEach(item => {
+      item.addEventListener('click', () => {
+        const path = item.dataset.path;
+        console.log('Navigate to:', path);
+        // window.location.href = path;
+      });
+    });
+
+    // Keyboard shortcuts
+    document.addEventListener('keydown', (e) => {
+      const key = e.key.toLowerCase();
+      const shortcuts = {
+        'b': '/blog',
+        'w': '/work',
+        'e': '/everyday',
+        'a': '/about',
+        'c': '/contact'
+      };
+
+      if (shortcuts[key] && !e.ctrlKey && !e.metaKey) {
+        console.log('Navigate to:', shortcuts[key]);
+        // window.location.href = shortcuts[key];
+      }
+    });
+  </script>
+</body>
+</html>
