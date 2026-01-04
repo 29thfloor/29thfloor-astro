@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="128" height="128">
+  <!-- 16-bit style dithered portrait placeholder -->
+  <rect width="64" height="64" fill="#011518"/>
+
+  <!-- Dither pattern definition -->
+  <defs>
+    <pattern id="dither" width="2" height="2" patternUnits="userSpaceOnUse">
+      <rect width="1" height="1" fill="#0C3A38"/>
+      <rect x="1" y="1" width="1" height="1" fill="#0C3A38"/>
+    </pattern>
+  </defs>
+
+  <!-- Background dither -->
+  <rect width="64" height="64" fill="url(#dither)" opacity="0.5"/>
+
+  <!-- Head silhouette -->
+  <ellipse cx="32" cy="24" rx="12" ry="14" fill="#1D7A74"/>
+  <ellipse cx="32" cy="24" rx="10" ry="12" fill="#26A69A"/>
+
+  <!-- Shoulders/body -->
+  <ellipse cx="32" cy="58" rx="20" ry="16" fill="#1D7A74"/>
+  <ellipse cx="32" cy="58" rx="18" ry="14" fill="#26A69A"/>
+
+  <!-- Pixel details on face - eyes -->
+  <rect x="27" y="22" width="3" height="2" fill="#011518"/>
+  <rect x="34" y="22" width="3" height="2" fill="#011518"/>
+
+  <!-- Highlight pixels -->
+  <rect x="28" y="20" width="1" height="1" fill="#FFD600"/>
+  <rect x="35" y="20" width="1" height="1" fill="#FFD600"/>
+
+  <!-- Scanline effect -->
+  <g opacity="0.3">
+    <rect y="2" width="64" height="1" fill="#011518"/>
+    <rect y="6" width="64" height="1" fill="#011518"/>
+    <rect y="10" width="64" height="1" fill="#011518"/>
+    <rect y="14" width="64" height="1" fill="#011518"/>
+    <rect y="18" width="64" height="1" fill="#011518"/>
+    <rect y="22" width="64" height="1" fill="#011518"/>
+    <rect y="26" width="64" height="1" fill="#011518"/>
+    <rect y="30" width="64" height="1" fill="#011518"/>
+    <rect y="34" width="64" height="1" fill="#011518"/>
+    <rect y="38" width="64" height="1" fill="#011518"/>
+    <rect y="42" width="64" height="1" fill="#011518"/>
+    <rect y="46" width="64" height="1" fill="#011518"/>
+    <rect y="50" width="64" height="1" fill="#011518"/>
+    <rect y="54" width="64" height="1" fill="#011518"/>
+    <rect y="58" width="64" height="1" fill="#011518"/>
+    <rect y="62" width="64" height="1" fill="#011518"/>
+  </g>
+
+  <!-- Border -->
+  <rect x="0.5" y="0.5" width="63" height="63" fill="none" stroke="#26A69A" stroke-width="1"/>
+</svg>

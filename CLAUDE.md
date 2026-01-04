@@ -1,3 +1,15 @@
+# 29thfloor Project
+
+## Architecture
+
+- **Astro** — page structure, layouts, build-time data fetching (WordPress API)
+- **Web Components** — interactive elements (terminal-*, wireframe, animations)
+- **Client JS** — user-specific data (localStorage), real-time fetches
+
+Feature implementation plans live in `docs/implementation/`.
+
+---
+
 # Dev Project Workflow
 
 **This project uses a structured dev workflow. Follow it for all changes.**

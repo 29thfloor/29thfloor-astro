@@ -11,6 +11,8 @@
 
 Replace the content-heavy home page with a classic BBS welcome screen that matches the ANSI demoscene aesthetic. The landing features the SVG logo with color cycling, a snarky AI system message, BBS-style navigation menu, fake system stats, recent blog posts, a 16-bit SysOp photo, demoscene greets, and a mysterious animated element.
 
+**Architecture:** See `CLAUDE.md` for project-wide Astro + Web Components pattern.
+
 ---
 
 ## Visual Layout
@@ -69,7 +71,7 @@ Replace the content-heavy home page with a classic BBS welcome screen that match
 | **System Status** | Fake stats. Uptime counts from site "launch date" (1995-ish for fun). Visitors always 1,337. Node 7 of 7. Status: NOMINAL. |
 | **Recent Transmissions** | Latest 3 blog posts from API, styled as intercepted signals. Links to posts. |
 | **SysOp** | Photo of Daniel with heavy dithering/16-bit treatment (CSS or pre-processed image). Name + location. |
-| **Mysterious Element** | Animated color-cycling geometric shape, glitched runes, or pulsing sigil. Not interactive. Pure demoscene vibes. |
+| **Mysterious Element** | Slowly rotating wireframe shape with color cycling. Not interactive. Pure demoscene vibes. (Future: add more variants) |
 | **Greets** | Demoscene-style shoutouts. Could be static or slowly scroll/color cycle. Mix of real and fictional group names. |
 
 ---
@@ -149,7 +151,11 @@ Convert prototype to Astro component:
 |------|---------|
 | `prototypes/bbs-landing.html` | Standalone prototype for design iteration |
 | `src/components/BBSLanding.astro` | Main landing page component |
-| `src/assets/sysop-photo.png` | 16-bit dithered photo (or use CSS filters) |
+| `src/components/wireframe-shape.js` | Rotating wireframe web component |
+| `src/assets/sysop-photo.png` | 16-bit dithered photo (swap placeholder when ready) |
+
+**Already created:**
+- `src/assets/sysop-placeholder.svg` — Placeholder portrait with dithering effect
 
 ## Files to Modify
 
@@ -185,11 +191,13 @@ if (lastVisit) {
 localStorage.setItem('lastVisit', now.toString());
 ```
 
-### Mysterious Element Ideas
+### Mysterious Element
+Starting with: **Slowly rotating wireframe shape** (cube or icosahedron)
+
+Future variants to consider:
 - Pulsing geometric sigil (triangle, hexagon, eye)
 - Glitched/corrupted text that shifts
 - Waveform visualization
-- Slowly rotating wireframe shape
 - Constellation that subtly moves
 - Binary/hex that cycles through values
 
