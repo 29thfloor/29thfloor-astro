@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Terminal Frame - Test</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Fira Code', monospace;
+      background: #011518;
+      color: #26A69A;
+      min-height: 100vh;
+      padding: 2rem;
+    }
+
+    h1 {
+      margin-bottom: 2rem;
+      text-shadow: 0 0 10px #26A69A;
+    }
+
+    .demo-section {
+      margin-bottom: 3rem;
+    }
+
+    .demo-section h2 {
+      font-size: 0.875rem;
+      color: #0C3A38;
+      margin-bottom: 1rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    terminal-frame {
+      max-width: 600px;
+      margin-bottom: 2rem;
+    }
+
+    .sample-content {
+      line-height: 1.6;
+    }
+
+    .sample-content p {
+      margin-bottom: 1rem;
+    }
+
+    .sample-menu {
+      list-style: none;
+    }
+
+    .sample-menu li {
+      padding: 0.25rem 0;
+    }
+
+    .sample-menu .active {
+      color: #FFD600;
+    }
+
+    .sample-menu .active::before {
+      content: '> ';
+    }
+  </style>
+</head>
+<body>
+  <h1>Terminal Frame Component</h1>
+
+  <!-- Demo 1: Default -->
+  <section class="demo-section">
+    <h2>Demo 1: Default Settings</h2>
+    <terminal-frame>
+      <div class="sample-content">
+        <p>This is the default terminal frame with standard title and status.</p>
+        <p>Content goes in the slot and inherits the terminal styling.</p>
+      </div>
+    </terminal-frame>
+  </section>
+
+  <!-- Demo 2: Custom title and status -->
+  <section class="demo-section">
+    <h2>Demo 2: Custom Title & Status</h2>
+    <terminal-frame title="CODEX // ENTRY 042" status="DECRYPTING...">
+      <div class="sample-content">
+        <p><strong>SUBJECT:</strong> Cyberpunk Aesthetics</p>
+        <p>The visual language of cyberpunk emerged from a collision of noir sensibilities and technological anxiety...</p>
+      </div>
+    </terminal-frame>
+  </section>
+
+  <!-- Demo 3: Menu content -->
+  <section class="demo-section">
+    <h2>Demo 3: Menu Content</h2>
+    <terminal-frame title="29F_ TERMINAL v2.0" status="AWAITING INPUT">
+      <ul class="sample-menu">
+        <li class="active">PROFILE</li>
+        <li>PROJECTS</li>
+        <li>EVERYDAYS</li>
+        <li>TRANSMISSIONS</li>
+        <li>CODEX</li>
+        <li>CONTACT</li>
+      </ul>
+    </terminal-frame>
+  </section>
+
+  <!-- Demo 4: No scanlines -->
+  <section class="demo-section">
+    <h2>Demo 4: No Scanlines</h2>
+    <terminal-frame no-scanlines title="CLEAN MODE" status="SCANLINES OFF">
+      <div class="sample-content">
+        <p>This frame has the <code>no-scanlines</code> attribute set.</p>
+        <p>Useful for high-res content viewing or accessibility.</p>
+      </div>
+    </terminal-frame>
+  </section>
+
+  <script type="module" src="../src/components/terminal-frame.js"></script>
+</body>
+</html>
