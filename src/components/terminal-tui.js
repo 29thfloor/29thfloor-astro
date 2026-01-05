@@ -9,7 +9,10 @@
  * - menu: Show navigation menu
  * - help: Show available commands
  * - clear: Clear scrollback history
- * - home, blog, projects, work, about, contact, archive: Direct navigation
+ * - home, blog, projects, work, everyday, about, contact, archive: Direct navigation
+ *
+ * Keyboard Shortcuts:
+ * - H: Home, B: Blog, W: Work, E: Everyday, A: About, C: Contact
  */
 class TerminalTUI extends HTMLElement {
   static get observedAttributes() {
@@ -65,7 +68,22 @@ class TerminalTUI extends HTMLElement {
       work: () => this.navigate('/work'),
       about: () => this.navigate('/about'),
       contact: () => this.navigate('/contact'),
-      archive: () => this.navigate('/archive')
+      archive: () => this.navigate('/archive'),
+      everyday: () => this.navigate('/everyday')
+    };
+  }
+
+  /**
+   * Single-letter keyboard shortcuts for quick navigation
+   */
+  get shortcuts() {
+    return {
+      'h': '/',
+      'b': '/blog',
+      'w': '/work',
+      'e': '/everyday',
+      'a': '/about',
+      'c': '/contact'
     };
   }
 
@@ -185,6 +203,35 @@ class TerminalTUI extends HTMLElement {
       }
     };
     this.addEventListener('keydown', this._escapeHandler);
+
+    // Handle single-letter keyboard shortcuts for navigation
+    this._shortcutHandler = (e) => {
+      // Don't trigger if user is typing in an input (check composedPath for shadow DOM)
+      const path = e.composedPath();
+      const isTyping = path.some(el =>
+        el.tagName === 'INPUT' || el.tagName === 'TEXTAREA' || el.isContentEditable
+      );
+      if (isTyping) {
+        return;
+      }
+      // Don't trigger if modifier keys are pressed
+      if (e.ctrlKey || e.metaKey || e.altKey) {
+        return;
+      }
+      // Don't trigger if menu is visible (menu has its own navigation)
+      if (this._menuVisible) {
+        return;
+      }
+
+      const key = e.key.toLowerCase();
+      const navPath = this.shortcuts[key];
+
+      if (navPath) {
+        e.preventDefault();
+        this.navigate(navPath);
+      }
+    };
+    document.addEventListener('keydown', this._shortcutHandler);
   }
 
   cleanup() {
@@ -196,6 +243,9 @@ class TerminalTUI extends HTMLElement {
     }
     if (this._escapeHandler) {
       this.removeEventListener('keydown', this._escapeHandler);
+    }
+    if (this._shortcutHandler) {
+      document.removeEventListener('keydown', this._shortcutHandler);
     }
   }
 
@@ -233,7 +283,10 @@ class TerminalTUI extends HTMLElement {
     this.appendOutput('  clear    - Clear screen', 'system');
     this.appendOutput('', 'system');
     this.appendOutput('Direct navigation:', 'system');
-    this.appendOutput('  home, blog, projects, work, about, contact, archive', 'system');
+    this.appendOutput('  home, blog, projects, work, everyday, about, contact, archive', 'system');
+    this.appendOutput('', 'system');
+    this.appendOutput('Keyboard shortcuts:', 'system');
+    this.appendOutput('  [H]ome [B]log [W]ork [E]veryday [A]bout [C]ontact', 'system');
   }
 
   showError(message) {

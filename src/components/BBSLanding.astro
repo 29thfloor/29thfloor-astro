@@ -475,23 +475,7 @@ const greets = [
     });
   });
 
-  // Keyboard shortcuts
-  document.addEventListener('keydown', (e) => {
-    // Don't trigger if user is typing in an input
-    if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) {
-      return;
-    }
-
-    const key = e.key.toLowerCase();
-    const menuItem = document.querySelector(`.menu-item[data-key="${key}"]`) as HTMLElement;
-
-    if (menuItem && !e.ctrlKey && !e.metaKey && !e.altKey) {
-      const path = menuItem.dataset.path;
-      if (path) {
-        window.location.href = path;
-      }
-    }
-  });
+  // Keyboard shortcuts are handled globally by terminal-tui.js
 </script>
 
 <style>
