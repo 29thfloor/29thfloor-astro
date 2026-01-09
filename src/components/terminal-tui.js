@@ -24,6 +24,9 @@ class TerminalTUI extends HTMLElement {
     this.attachShadow({ mode: 'open' });
     this._menuVisible = false;
     this._initialized = false;
+    this._consoleHidden = false;
+    this._consoleHeight = 120;
+    this._isResizing = false;
   }
 
   connectedCallback() {
@@ -172,6 +175,8 @@ class TerminalTUI extends HTMLElement {
     this._output = this.shadowRoot.querySelector('terminal-output');
     this._menu = this.shadowRoot.querySelector('terminal-menu');
     this._prompt = this.shadowRoot.querySelector('terminal-prompt');
+    this._consoleTray = this.shadowRoot.getElementById('console-tray');
+    this._resizeHandle = this.shadowRoot.getElementById('resize-handle');
   }
 
   setupEventListeners() {
@@ -232,6 +237,42 @@ class TerminalTUI extends HTMLElement {
       }
     };
     document.addEventListener('keydown', this._shortcutHandler);
+
+    // Handle console resize
+    this._resizeMouseDown = (e) => {
+      this._isResizing = true;
+      this._resizeHandle.classList.add('dragging');
+      this._consoleTray.classList.add('resizing');
+      document.body.style.cursor = 'ns-resize';
+      document.body.style.userSelect = 'none';
+      e.preventDefault();
+    };
+    this._resizeHandle.addEventListener('mousedown', this._resizeMouseDown);
+
+    this._resizeMouseMove = (e) => {
+      if (!this._isResizing) return;
+
+      const containerRect = this.getBoundingClientRect();
+      const newHeight = containerRect.bottom - e.clientY;
+      const minHeight = 48;
+      const maxHeight = window.innerHeight * 0.5;
+      const clampedHeight = Math.max(minHeight, Math.min(maxHeight, newHeight));
+
+      this._consoleTray.style.height = clampedHeight + 'px';
+      this._consoleHeight = clampedHeight;
+    };
+    document.addEventListener('mousemove', this._resizeMouseMove);
+
+    this._resizeMouseUp = () => {
+      if (this._isResizing) {
+        this._isResizing = false;
+        this._resizeHandle.classList.remove('dragging');
+        this._consoleTray.classList.remove('resizing');
+        document.body.style.cursor = '';
+        document.body.style.userSelect = '';
+      }
+    };
+    document.addEventListener('mouseup', this._resizeMouseUp);
   }
 
   cleanup() {
@@ -247,6 +288,52 @@ class TerminalTUI extends HTMLElement {
     if (this._shortcutHandler) {
       document.removeEventListener('keydown', this._shortcutHandler);
     }
+    if (this._resizeMouseDown) {
+      this._resizeHandle?.removeEventListener('mousedown', this._resizeMouseDown);
+    }
+    if (this._resizeMouseMove) {
+      document.removeEventListener('mousemove', this._resizeMouseMove);
+    }
+    if (this._resizeMouseUp) {
+      document.removeEventListener('mouseup', this._resizeMouseUp);
+    }
+  }
+
+  /**
+   * Toggle console visibility
+   * @returns {boolean} New visibility state (true = visible)
+   */
+  toggleConsole() {
+    if (this._consoleHidden) {
+      // Show console
+      this._consoleTray.classList.remove('hidden');
+      this._resizeHandle.style.display = '';
+      this._consoleTray.style.height = this._consoleHeight + 'px';
+      this._consoleHidden = false;
+      this._prompt?.focus();
+    } else {
+      // Hide console
+      this._consoleHeight = this._consoleTray.offsetHeight;
+      this._consoleTray.classList.add('hidden');
+      this._resizeHandle.style.display = 'none';
+      this._consoleHidden = true;
+    }
+
+    // Dispatch event for terminal-frame to update toggle button
+    this.dispatchEvent(new CustomEvent('console:toggle', {
+      detail: { hidden: this._consoleHidden },
+      bubbles: true
+    }));
+
+    return !this._consoleHidden;
+  }
+
+  /**
+   * Check if console is currently hidden
+   * @returns {boolean}
+   */
+  get consoleHidden() {
+    return this._consoleHidden;
   }
 
   showInitialContent() {
@@ -324,19 +411,23 @@ class TerminalTUI extends HTMLElement {
     this.shadowRoot.innerHTML = `
       <style>${this.getStyles()}</style>
       <div class="tui-container">
-        <terminal-output class="tui-output">
+        <div class="page-content">
           <slot></slot>
-        </terminal-output>
-        <div class="tui-input-area">
-          <terminal-menu
-            style="display: none;"
-            prompt="Where to next?"
-            items='${menuItems}'
-          ></terminal-menu>
-          <terminal-prompt
-            prompt-char=">"
-            placeholder="type a command..."
-          ></terminal-prompt>
+        </div>
+        <div class="resize-handle" id="resize-handle"></div>
+        <div class="console-tray" id="console-tray" style="height: ${this._consoleHeight}px">
+          <terminal-output class="console-output"></terminal-output>
+          <div class="console-prompt-area">
+            <terminal-menu
+              style="display: none;"
+              prompt="Where to next?"
+              items='${menuItems}'
+            ></terminal-menu>
+            <terminal-prompt
+              prompt-char=">"
+              placeholder="type a command..."
+            ></terminal-prompt>
+          </div>
         </div>
       </div>
     `;
@@ -345,6 +436,9 @@ class TerminalTUI extends HTMLElement {
   getStyles() {
     return `
       :host {
+        --console-min-height: 48px;
+        --console-max-height: 50vh;
+
         display: flex;
         flex-direction: column;
         height: 100%;
@@ -359,16 +453,85 @@ class TerminalTUI extends HTMLElement {
         min-height: 0;
       }
 
-      .tui-output {
+      /* Page content area - scrollable independently */
+      .page-content {
         flex: 1;
+        overflow-y: auto;
+        overflow-x: hidden;
         min-height: 0;
+      }
+
+      /* Resize handle */
+      .resize-handle {
+        flex-shrink: 0;
+        height: 6px;
+        background: #0C3A38;
+        cursor: ns-resize;
+        position: relative;
+        transition: background 0.15s ease;
+      }
+
+      .resize-handle:hover,
+      .resize-handle.dragging {
+        background: #1D7A74;
+      }
+
+      .resize-handle::after {
+        content: '';
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        width: 40px;
+        height: 2px;
+        background: #26A69A;
+        border-radius: 1px;
+        opacity: 0.5;
+      }
+
+      .resize-handle:hover::after,
+      .resize-handle.dragging::after {
+        opacity: 1;
+        background: #FFD600;
+      }
+
+      /* Console tray */
+      .console-tray {
+        flex-shrink: 0;
+        display: flex;
+        flex-direction: column;
+        min-height: var(--console-min-height);
+        max-height: var(--console-max-height);
+        border-top: 1px solid #0C3A38;
+        background: rgba(0, 0, 0, 0.3);
+        transition: height 0.2s ease;
+      }
+
+      .console-tray.resizing {
+        transition: none;
+      }
+
+      .console-tray.hidden {
+        height: 0 !important;
+        min-height: 0 !important;
+        border-top: none;
         overflow: hidden;
       }
 
-      .tui-input-area {
+      /* Console output area */
+      .console-output {
+        flex: 1;
+        min-height: 0;
+        overflow-y: auto;
+        overflow-x: hidden;
+      }
+
+      /* Console prompt area */
+      .console-prompt-area {
         flex-shrink: 0;
         border-top: 1px solid #0C3A38;
         padding: 0.5rem 1rem;
+        background: rgba(0, 0, 0, 0.2);
       }
 
       /* Fade transitions for menu/prompt toggle */
@@ -389,10 +552,33 @@ class TerminalTUI extends HTMLElement {
         display: none;
       }
 
+      /* Scrollbar styling */
+      .page-content::-webkit-scrollbar,
+      .console-output::-webkit-scrollbar {
+        width: 8px;
+      }
+
+      .page-content::-webkit-scrollbar-track,
+      .console-output::-webkit-scrollbar-track {
+        background: #011518;
+      }
+
+      .page-content::-webkit-scrollbar-thumb,
+      .console-output::-webkit-scrollbar-thumb {
+        background: #0C3A38;
+        border-radius: 4px;
+      }
+
+      .page-content::-webkit-scrollbar-thumb:hover,
+      .console-output::-webkit-scrollbar-thumb:hover {
+        background: #1D7A74;
+      }
+
       /* Reduced motion */
       @media (prefers-reduced-motion: reduce) {
         terminal-menu,
-        terminal-prompt {
+        terminal-prompt,
+        .console-tray {
           transition: none;
         }
       }

@@ -14,6 +14,11 @@ class TerminalFrame extends HTMLElement {
 
   connectedCallback() {
     this.render();
+    this.setupEventListeners();
+  }
+
+  disconnectedCallback() {
+    this.cleanup();
   }
 
   attributeChangedCallback(name, oldValue, newValue) {
@@ -49,9 +54,47 @@ class TerminalFrame extends HTMLElement {
         </div>
         <footer class="terminal-footer">
           <span class="terminal-status">STATUS: ${this.status}</span>
+          <div class="terminal-controls">
+            <button class="console-toggle active" id="console-toggle">
+              <span class="console-toggle-icon">▼</span>
+              <span>Console</span>
+            </button>
+          </div>
         </footer>
       </div>
     `;
+  }
+
+  setupEventListeners() {
+    // Handle console toggle button click
+    this._toggleBtn = this.shadowRoot.getElementById('console-toggle');
+    this._toggleHandler = () => {
+      // Find the terminal-tui inside the slot
+      const tui = this.querySelector('terminal-tui');
+      if (tui && typeof tui.toggleConsole === 'function') {
+        tui.toggleConsole();
+      }
+    };
+    this._toggleBtn?.addEventListener('click', this._toggleHandler);
+
+    // Listen for console toggle events from terminal-tui
+    this._consoleToggleHandler = (e) => {
+      const { hidden } = e.detail;
+      if (this._toggleBtn) {
+        this._toggleBtn.classList.toggle('active', !hidden);
+        this._toggleBtn.classList.toggle('hidden', hidden);
+      }
+    };
+    this.addEventListener('console:toggle', this._consoleToggleHandler);
+  }
+
+  cleanup() {
+    if (this._toggleHandler && this._toggleBtn) {
+      this._toggleBtn.removeEventListener('click', this._toggleHandler);
+    }
+    if (this._consoleToggleHandler) {
+      this.removeEventListener('console:toggle', this._consoleToggleHandler);
+    }
   }
 
   getStyles() {
@@ -192,6 +235,44 @@ class TerminalFrame extends HTMLElement {
         color: var(--term-dim);
         text-transform: uppercase;
         letter-spacing: 0.05em;
+      }
+
+      .terminal-controls {
+        display: flex;
+        gap: 0.5rem;
+      }
+
+      .console-toggle {
+        background: transparent;
+        border: 1px solid var(--term-dim);
+        color: var(--term-text);
+        padding: 0.25rem 0.5rem;
+        font-family: inherit;
+        font-size: 0.75rem;
+        cursor: pointer;
+        transition: all 0.15s ease;
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+      }
+
+      .console-toggle:hover {
+        border-color: var(--term-text);
+        background: rgba(38, 166, 154, 0.1);
+      }
+
+      .console-toggle.active {
+        border-color: var(--term-accent);
+        color: var(--term-accent);
+      }
+
+      .console-toggle-icon {
+        font-size: 0.625rem;
+        transition: transform 0.2s ease;
+      }
+
+      .console-toggle.hidden .console-toggle-icon {
+        transform: rotate(180deg);
       }
 
       /* Slotted content fills available space */
