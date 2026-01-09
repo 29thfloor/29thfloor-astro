@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Console Tray Prototype</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --term-bg: #011518;
+      --term-text: #26A69A;
+      --term-accent: #FFD600;
+      --term-dim: #0C3A38;
+      --term-highlight: #1D7A74;
+
+      --console-min-height: 48px;
+      --console-max-height: 50vh;
+      --console-default-height: 120px;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      height: 100%;
+      overflow: hidden;
+      background: var(--term-bg);
+      font-family: 'Fira Code', monospace;
+      color: var(--term-text);
+    }
+
+    /* Main layout container */
+    .terminal-layout {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+    }
+
+    /* Header bar */
+    .terminal-header {
+      flex-shrink: 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid var(--term-dim);
+    }
+
+    .terminal-title {
+      font-weight: bold;
+      text-shadow: 0 0 10px var(--term-text);
+    }
+
+    .terminal-indicators {
+      letter-spacing: 0.25em;
+      color: var(--term-dim);
+    }
+
+    /* Page content area */
+    .page-content {
+      flex: 1;
+      overflow-y: auto;
+      overflow-x: hidden;
+      min-height: 0;
+    }
+
+    .page-content-inner {
+      padding: 2rem;
+    }
+
+    /* Resize handle */
+    .resize-handle {
+      flex-shrink: 0;
+      height: 6px;
+      background: var(--term-dim);
+      cursor: ns-resize;
+      position: relative;
+      transition: background 0.15s ease;
+    }
+
+    .resize-handle:hover,
+    .resize-handle.dragging {
+      background: var(--term-highlight);
+    }
+
+    .resize-handle::after {
+      content: '';
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      width: 40px;
+      height: 2px;
+      background: var(--term-text);
+      border-radius: 1px;
+      opacity: 0.5;
+    }
+
+    .resize-handle:hover::after,
+    .resize-handle.dragging::after {
+      opacity: 1;
+      background: var(--term-accent);
+    }
+
+    /* Console tray */
+    .console-tray {
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      height: var(--console-default-height);
+      min-height: var(--console-min-height);
+      max-height: var(--console-max-height);
+      border-top: 1px solid var(--term-dim);
+      background: rgba(0, 0, 0, 0.3);
+      transition: height 0.2s ease;
+    }
+
+    .console-tray.resizing {
+      transition: none;
+    }
+
+    .console-tray.hidden {
+      height: 0 !important;
+      min-height: 0 !important;
+      border-top: none;
+      overflow: hidden;
+    }
+
+    /* Console output area */
+    .console-output {
+      flex: 1;
+      overflow-y: auto;
+      overflow-x: hidden;
+      padding: 0.5rem 1rem;
+      font-size: 0.875rem;
+      min-height: 0;
+    }
+
+    .console-line {
+      padding: 0.15rem 0;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    .console-line.command {
+      color: var(--term-accent);
+    }
+
+    .console-line.command::before {
+      content: '> ';
+      color: var(--term-dim);
+    }
+
+    .console-line.system {
+      color: var(--term-text);
+    }
+
+    .console-line.error {
+      color: #ff6b6b;
+    }
+
+    /* Console prompt */
+    .console-prompt {
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      padding: 0.5rem 1rem;
+      border-top: 1px solid var(--term-dim);
+      background: rgba(0, 0, 0, 0.2);
+    }
+
+    .prompt-char {
+      color: var(--term-accent);
+      margin-right: 0.5rem;
+    }
+
+    .prompt-input {
+      flex: 1;
+      background: transparent;
+      border: none;
+      color: var(--term-text);
+      font-family: inherit;
+      font-size: 0.875rem;
+      outline: none;
+    }
+
+    .prompt-input::placeholder {
+      color: var(--term-dim);
+    }
+
+    /* Status bar / footer */
+    .terminal-footer {
+      flex-shrink: 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.5rem 1rem;
+      border-top: 1px solid var(--term-dim);
+      font-size: 0.75rem;
+    }
+
+    .terminal-status {
+      color: var(--term-dim);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .terminal-controls {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .console-toggle {
+      background: transparent;
+      border: 1px solid var(--term-dim);
+      color: var(--term-text);
+      padding: 0.25rem 0.5rem;
+      font-family: inherit;
+      font-size: 0.75rem;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+
+    .console-toggle:hover {
+      border-color: var(--term-text);
+      background: rgba(38, 166, 154, 0.1);
+    }
+
+    .console-toggle.active {
+      border-color: var(--term-accent);
+      color: var(--term-accent);
+    }
+
+    .console-toggle-icon {
+      font-size: 0.625rem;
+      transition: transform 0.2s ease;
+    }
+
+    .console-toggle.hidden .console-toggle-icon {
+      transform: rotate(180deg);
+    }
+
+    /* Demo page content */
+    .demo-content {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .demo-content h1 {
+      color: var(--term-accent);
+      margin-bottom: 1rem;
+    }
+
+    .demo-content p {
+      margin-bottom: 1rem;
+      line-height: 1.6;
+    }
+
+    .demo-content .spacer {
+      height: 300px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px dashed var(--term-dim);
+      color: var(--term-dim);
+      margin: 2rem 0;
+    }
+
+    /* Scrollbar styling */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: var(--term-bg);
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: var(--term-dim);
+      border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--term-highlight);
+    }
+
+    /* Reduced motion */
+    @media (prefers-reduced-motion: reduce) {
+      .console-tray,
+      .console-toggle-icon {
+        transition: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="terminal-layout">
+
+    <!-- Header -->
+    <header class="terminal-header">
+      <span class="terminal-title">29F_ TERMINAL v2.0</span>
+      <span class="terminal-indicators">◀ ▪ ▪ ▪ ▶</span>
+    </header>
+
+    <!-- Page content (scrollable) -->
+    <main class="page-content">
+      <div class="page-content-inner">
+        <div class="demo-content">
+          <h1>Page Content Area</h1>
+          <p>This area scrolls independently from the console tray below. The console tray can be resized by dragging the handle, or toggled with the button in the status bar.</p>
+          <p>Try these interactions:</p>
+          <ul style="margin-left: 2rem; margin-bottom: 1rem;">
+            <li>Drag the resize handle to change console height</li>
+            <li>Click the toggle button in the footer to minimize/restore</li>
+            <li>Type commands in the prompt and press Enter</li>
+            <li>Scroll this content area independently</li>
+          </ul>
+          <div class="spacer">Scroll spacer content</div>
+          <p>More content below the fold to demonstrate scrolling...</p>
+          <div class="spacer">Another scroll spacer</div>
+          <p>End of page content.</p>
+        </div>
+      </div>
+    </main>
+
+    <!-- Resize handle -->
+    <div class="resize-handle" id="resize-handle"></div>
+
+    <!-- Console tray -->
+    <div class="console-tray" id="console-tray">
+      <div class="console-output" id="console-output">
+        <div class="console-line system">Welcome to 29thfloor.com</div>
+        <div class="console-line system">Type "help" for available commands.</div>
+      </div>
+      <div class="console-prompt">
+        <span class="prompt-char">></span>
+        <input type="text" class="prompt-input" id="prompt-input" placeholder="type a command..." autofocus>
+      </div>
+    </div>
+
+    <!-- Footer / Status bar -->
+    <footer class="terminal-footer">
+      <span class="terminal-status">STATUS: ONLINE</span>
+      <div class="terminal-controls">
+        <button class="console-toggle active" id="console-toggle">
+          <span class="console-toggle-icon">▼</span>
+          <span>Console</span>
+        </button>
+      </div>
+    </footer>
+
+  </div>
+
+  <script>
+    // Elements
+    const consoleTray = document.getElementById('console-tray');
+    const resizeHandle = document.getElementById('resize-handle');
+    const consoleToggle = document.getElementById('console-toggle');
+    const consoleOutput = document.getElementById('console-output');
+    const promptInput = document.getElementById('prompt-input');
+
+    // State
+    let isResizing = false;
+    let isHidden = false;
+    let savedHeight = 120; // Remember height when hiding
+
+    // Constants
+    const MIN_HEIGHT = 48;
+    const MAX_HEIGHT = window.innerHeight * 0.5;
+
+    // --- Resize functionality ---
+
+    resizeHandle.addEventListener('mousedown', (e) => {
+      isResizing = true;
+      resizeHandle.classList.add('dragging');
+      consoleTray.classList.add('resizing');
+      document.body.style.cursor = 'ns-resize';
+      document.body.style.userSelect = 'none';
+      e.preventDefault();
+    });
+
+    document.addEventListener('mousemove', (e) => {
+      if (!isResizing) return;
+
+      const footerHeight = document.querySelector('.terminal-footer').offsetHeight;
+      const newHeight = window.innerHeight - e.clientY - footerHeight;
+      const clampedHeight = Math.max(MIN_HEIGHT, Math.min(MAX_HEIGHT, newHeight));
+
+      consoleTray.style.height = clampedHeight + 'px';
+      savedHeight = clampedHeight;
+    });
+
+    document.addEventListener('mouseup', () => {
+      if (isResizing) {
+        isResizing = false;
+        resizeHandle.classList.remove('dragging');
+        consoleTray.classList.remove('resizing');
+        document.body.style.cursor = '';
+        document.body.style.userSelect = '';
+      }
+    });
+
+    // --- Toggle functionality ---
+
+    consoleToggle.addEventListener('click', () => {
+      if (isHidden) {
+        // Show console
+        consoleTray.classList.remove('hidden');
+        resizeHandle.style.display = '';
+        consoleTray.style.height = savedHeight + 'px';
+        consoleToggle.classList.remove('hidden');
+        consoleToggle.classList.add('active');
+        isHidden = false;
+        promptInput.focus();
+      } else {
+        // Hide console
+        savedHeight = consoleTray.offsetHeight;
+        consoleTray.classList.add('hidden');
+        resizeHandle.style.display = 'none';
+        consoleToggle.classList.add('hidden');
+        consoleToggle.classList.remove('active');
+        isHidden = true;
+      }
+    });
+
+    // --- Command handling ---
+
+    const commands = {
+      help: () => {
+        appendOutput('Available commands:', 'system');
+        appendOutput('  help     - Show this help message', 'system');
+        appendOutput('  clear    - Clear console output', 'system');
+        appendOutput('  echo     - Echo text back', 'system');
+        appendOutput('', 'system');
+        appendOutput('Keyboard shortcuts:', 'system');
+        appendOutput('  [H]ome [B]log [W]ork [E]veryday [A]bout [C]ontact', 'system');
+      },
+      clear: () => {
+        consoleOutput.innerHTML = '';
+      },
+      echo: (args) => {
+        appendOutput(args || '(empty)', 'system');
+      }
+    };
+
+    function appendOutput(text, type = 'system') {
+      const line = document.createElement('div');
+      line.className = `console-line ${type}`;
+      line.textContent = text;
+      consoleOutput.appendChild(line);
+      consoleOutput.scrollTop = consoleOutput.scrollHeight;
+    }
+
+    function executeCommand(input) {
+      const trimmed = input.trim();
+      if (!trimmed) return;
+
+      // Echo the command
+      appendOutput(trimmed, 'command');
+
+      // Parse command and args
+      const [cmd, ...argParts] = trimmed.split(' ');
+      const args = argParts.join(' ');
+
+      // Execute
+      const handler = commands[cmd.toLowerCase()];
+      if (handler) {
+        handler(args);
+      } else {
+        appendOutput(`Unknown command: ${cmd}`, 'error');
+        appendOutput('Type "help" for available commands.', 'system');
+      }
+    }
+
+    promptInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        executeCommand(promptInput.value);
+        promptInput.value = '';
+      }
+    });
+
+    // --- Window resize handling ---
+
+    window.addEventListener('resize', () => {
+      // Update max height on window resize
+      const maxHeight = window.innerHeight * 0.5;
+      const currentHeight = consoleTray.offsetHeight;
+      if (currentHeight > maxHeight) {
+        consoleTray.style.height = maxHeight + 'px';
+        savedHeight = maxHeight;
+      }
+    });
+
+    // Focus input on click anywhere in console
+    consoleTray.addEventListener('click', (e) => {
+      if (e.target !== promptInput) {
+        promptInput.focus();
+      }
+    });
+  </script>
+</body>
+</html>
